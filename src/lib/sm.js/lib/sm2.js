@@ -50,7 +50,9 @@ var _sm2Params = {
 
 }
 
-exports.curve = SM2 = SM2Curve(_sm2Params);
+// exports.curve = SM2 = SM2Curve(_sm2Params);
+var SM2 = SM2Curve(_sm2Params);
+exports.curve = SM2
 
 
 /**
@@ -432,49 +434,62 @@ SM2KeyPair.prototype.signDigest = function(digest) {
     r: "",
     s: ""
   }
-  while (true) {
+  // while (true) {
+  //   var k = new BN(_drbg.generate(32, 'hex', utils.random(64)), 16).umod(this.curve.n);
+  //   // k = new BN('38359979097965737626287108512938308997934657964393243462211198163060042537245', 10)
+  //   // console.log("this.curve.g", this.curve.g);
+  //   // console.log("k:", k.toString());
+  //   var kg = this.curve.g.mul(k);
+  //   // console.log("kg:", kg);
+  //   var r = utils.hashToBN(digest).add(kg.getX()).umod(this.curve.n);
+  //   // var r =
+  //   // console.log("k =", k);
+  //   // console.log("k =", k.toString());
+  //   // r = 0
+  //   if (r.isZero()) {
+  //     continue;
+  //   }
+  //   // r + k = n
+  //   if (r.add(k).eq(this.curve.n)) {
+  //     continue;
+  //   }
+  //   // var t1 = new BN(1).add(this.pri).invm(this.curve.n);
+  //   // var t2 = k.sub(r.mul(this.pri)).umod(this.curve.n);
+  //   // var s = t1.mul(t2).umod(this.curve.n);
+  //   var t1 = new BN(1).add(this.pri).invm(this.curve.n);
+  //   var t2 = k.sub(r.mul(this.pri))//.umod(this.curve.n);
+  //   var s = t1.mul(t2).umod(this.curve.n);
+  //   // s = k.sub(this.pri.mul(r))
+  //   // d1Inv = this.pri.add(new BN(1)).invm(this.curve.n)
+  //   // s = s.mul(d1Inv)
+  //   // s = s.umod(this.curve.n)
+  //   if (!s.isZero()) {
+  //     // console.log("r", r.toString(10))
+  //     // console.log("s", s.toString(10))
+  //     signature.r = utils.padStart(r.toString(16), 64, '0');
+  //     signature.s = utils.padStart(s.toString(16), 64, '0');
+  //     break;
+  //   }
+  // }
+  var isZeroLi = true
+  while (isZeroLi) {
     var k = new BN(_drbg.generate(32, 'hex', utils.random(64)), 16).umod(this.curve.n);
-    // k = new BN('38359979097965737626287108512938308997934657964393243462211198163060042537245', 10)
-    // console.log("this.curve.g", this.curve.g);
-    // console.log("k:", k.toString());
     var kg = this.curve.g.mul(k);
-    // console.log("kg:", kg);
     var r = utils.hashToBN(digest).add(kg.getX()).umod(this.curve.n);
-    // var r = 
-
-    // console.log("k =", k);
-    // console.log("k =", k.toString());
-
-    // r = 0
     if (r.isZero()) {
       continue;
     }
-    // r + k = n
     if (r.add(k).eq(this.curve.n)) {
       continue;
     }
-
-    // var t1 = new BN(1).add(this.pri).invm(this.curve.n);
-    // var t2 = k.sub(r.mul(this.pri)).umod(this.curve.n);
-    // var s = t1.mul(t2).umod(this.curve.n);
-
-
     var t1 = new BN(1).add(this.pri).invm(this.curve.n);
     var t2 = k.sub(r.mul(this.pri))//.umod(this.curve.n);
     var s = t1.mul(t2).umod(this.curve.n);
-
-    // s = k.sub(this.pri.mul(r))
-    // d1Inv = this.pri.add(new BN(1)).invm(this.curve.n)
-    // s = s.mul(d1Inv)
-    // s = s.umod(this.curve.n)
-
-
     if (!s.isZero()) {
-      // console.log("r", r.toString(10))
-      // console.log("s", s.toString(10))
       signature.r = utils.padStart(r.toString(16), 64, '0');
       signature.s = utils.padStart(s.toString(16), 64, '0');
-      break;
+      isZeroLi = false
+      // break;
     }
   }
 
@@ -491,7 +506,29 @@ SM2KeyPair.prototype.signDigest512 = function(digest, msgHash) {
   var k = null
   var e = utils.bnSetBytesArr(msgHash, 10)
   // console.log('e sign:', e.toString())
-  while (true) {
+  // while (true) {
+  //   k = new BN(digest, 16)
+  //   var kg = this.curve.g.mul(k)
+  //   var r = e.add(kg.getX()).mod(this.curve.n)
+  //   // r = 0
+  //   if (r.isZero()) {
+  //     continue;
+  //   }
+  //   // r + k = n
+  //   if (r.add(k).eq(this.curve.n)) {
+  //     continue;
+  //   }
+  //   var t1 = new BN(1).add(this.pri).invm(this.curve.n);
+  //   var t2 = k.sub(r.mul(this.pri))//.umod(this.curve.n);
+  //   var s = t1.mul(t2).umod(this.curve.n);
+  //   if (!s.isZero()) {
+  //     signature.r = utils.padStart(r.toString(16), 64, '0');
+  //     signature.s = utils.padStart(s.toString(16), 64, '0');
+  //     break;
+  //   }
+  // }
+  var isZeroLi = true
+  while (isZeroLi) {
     k = new BN(digest, 16)
     var kg = this.curve.g.mul(k)
     var r = e.add(kg.getX()).mod(this.curve.n)
@@ -509,7 +546,8 @@ SM2KeyPair.prototype.signDigest512 = function(digest, msgHash) {
     if (!s.isZero()) {
       signature.r = utils.padStart(r.toString(16), 64, '0');
       signature.s = utils.padStart(s.toString(16), 64, '0');
-      break;
+      isZeroLi = false
+      // break;
     }
   }
   return signature;
@@ -604,7 +642,7 @@ SM2KeyPair.prototype._combine = function(msg) {
   za = za.concat(this.pub.getX().toArray());
   za = za.concat(this.pub.getY().toArray());
 
-  h = new sm3();
+  var h = new sm3();
   za = h.sum(za);
 
   // console.log(za.join())
@@ -672,7 +710,7 @@ function kdf(x, y, length) {
     }
     ct++
   }
-  for (var i = 0; i < length; i++) {
+  for (i = 0; i < length; i++) {
     if (res[i] != 0) {
       return {res: res, bool: true}
     }
@@ -685,9 +723,41 @@ function kdf(x, y, length) {
  * @return {[type]}     [description]
  */
 SM2KeyPair.prototype.encrypt = function(msg) {
-  let [lenx1, leny1, lenx2, leny2, length] = [0, 0, 0, 0, msg.length]
-  while (true) {
-    var res = []
+  // let [lenx1, leny1, lenx2, leny2, length] = [0, 0, 0, 0, msg.length]
+  // while (true) {
+  //   var res = []
+  //   var k = randFieldElement(this.curve)
+  //   var kg = this.curve.g.mul(k)
+  //   var x1 = kg.getX()
+  //   var y1 = kg.getY()
+  //   var kpub = this.pub.mul(k)
+  //   var x2 = kpub.getX()
+  //   var y2 = kpub.getY()
+  //   // let [lenx1, leny1, lenx2, leny2]   = [x1.byteLength(), y1.byteLength(), x2.byteLength(), y2.byteLength()]
+  //   res = res.concat(x1.toArray('be', 32))
+  //   res = res.concat(y1.toArray('be', 32))
+  //   var tm = []
+  //   tm = tm.concat(x2.toArray('be', 32))
+  //   // tm = tm.concat(utils.strToBytes(msg))
+  //   tm = tm.concat(utils.strToAscii(msg))
+  //   tm = tm.concat(y2.toArray('be', 32))
+  //   var h = new sm3().sum(tm)
+  //   res = res.concat(h)
+  //   var kdfRes = kdf(x2.toArray(), y2.toArray(), length)
+  //   if (!kdfRes.bool) {
+  //     continue
+  //   }
+  //   res = res.concat(kdfRes.res)
+  //   for (var i = 0; i < length; i++) {
+  //     // res[96+i] ^= utils.strToBytes(msg.slice(i, i+1))[0]
+  //     res[96+i] ^= utils.strToAscii(msg.slice(i, i+1))[0]
+  //   }
+  //   return res
+  // }
+  // 解决 Unexpected constant condition
+  var res = []
+  var kdfRes = {bool: false}
+  while (!kdfRes.bool) {
     var k = randFieldElement(this.curve)
     var kg = this.curve.g.mul(k)
     var x1 = kg.getX()
@@ -695,7 +765,7 @@ SM2KeyPair.prototype.encrypt = function(msg) {
     var kpub = this.pub.mul(k)
     var x2 = kpub.getX()
     var y2 = kpub.getY()
-    let [lenx1, leny1, lenx2, leny2] = [x1.byteLength(), y1.byteLength(), x2.byteLength(), y2.byteLength()]
+    // let [lenx1, leny1, lenx2, leny2]   = [x1.byteLength(), y1.byteLength(), x2.byteLength(), y2.byteLength()]
     res = res.concat(x1.toArray('be', 32))
     res = res.concat(y1.toArray('be', 32))
     var tm = []
@@ -705,17 +775,18 @@ SM2KeyPair.prototype.encrypt = function(msg) {
     tm = tm.concat(y2.toArray('be', 32))
     var h = new sm3().sum(tm)
     res = res.concat(h)
-    var kdfRes = kdf(x2.toArray(), y2.toArray(), length)
-    if (!kdfRes.bool) {
-      continue
-    }
-    res = res.concat(kdfRes.res)
-    for (var i = 0; i < length; i++) {
-      // res[96+i] ^= utils.strToBytes(msg.slice(i, i+1))[0]
-      res[96+i] ^= utils.strToAscii(msg.slice(i, i+1))[0]
-    }
-    return res
+    // var kdfRes = kdf(x2.toArray(), y2.toArray(), length)
+    kdfRes = kdf(x2.toArray(), y2.toArray(), length)
+    // if (!kdfRes.bool) {
+    //   continue
+    // }
   }
+  res = res.concat(kdfRes.res)
+  for (var i = 0; i < length; i++) {
+    // res[96+i] ^= utils.strToBytes(msg.slice(i, i+1))[0]
+    res[96+i] ^= utils.strToAscii(msg.slice(i, i+1))[0]
+  }
+  return res
 }
 /**
  * 解密
@@ -732,7 +803,7 @@ SM2KeyPair.prototype.decrypt = function(msg) {
   // console.log('msg', msg)
   // 此时msg是 []byte 类型
   let [length, x, y] = [msg.length - 96, utils.bnSetBytesArr(msg.slice(0, 32)), utils.bnSetBytesArr(msg.slice(32, 64))]
-  var prig = this.curve.g.mul(this.pri)
+  // var prig = this.curve.g.mul(this.pri) // 没有被用到
   var p2 = _sm2Point(x, y).mul(this.pri)
   let [x2, y2] = [p2.getX(), p2.getY()]
 
