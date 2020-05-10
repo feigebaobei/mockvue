@@ -4,6 +4,15 @@ const sm = require('./sm.js')
 const axios = require('axios')
 // const sm4 = require('sm-crypto').sm4;
 
+// 这里使用非常暴力的方式安装sm2.js依赖的elliptic
+var elliptic = require('elliptic');
+// elliptic.curve.short.call(this, params);
+var EC = require('elliptic').ec;
+var ec = new EC('secp256k1');
+// Generate keys
+var key = ec.genKeyPair();
+ console.log('测试elliptic是否被安装', key)
+
 var hashStr = 'c888c9ce9e098d5864d3ded6ebcc140a12142263bace3a23a36f9905f12bd64a' // 与go代码里一样的字符串
 var priStr = '55c974f17a0b44178d982dcd478150b8a4c0f206f397d7880d06bf5a72932b81'
 var sm2 = sm.sm2
