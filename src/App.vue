@@ -4,11 +4,22 @@
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
     <!-- <h2>welcome to index page.</h2>
     <p>content of this page.</p> -->
-    <div id="nav">
-      <router-link to="/index" class="navItem">index</router-link>
-      <router-link to="/login" class="navItem">login</router-link>
-      <router-link to="/content" class="navItem">content</router-link>
-    </div>
+    <header class="header">
+      <div id="nav">
+        <router-link to="/index" class="navItem">index</router-link>
+        <router-link to="/login" class="navItem">login</router-link>
+        <router-link to="/cont" class="navItem">content</router-link>
+        <router-link to="/pvdata" class="navItem">pvdata</router-link>
+        <router-link to="/staticp" class="navItem">staticPage</router-link>
+      </div>
+      <div class="userInfoBox" v-if="name || avatar">
+        <span class="name">{{name}}</span>
+        <img :src="avatar" alt="" class="avatar">
+      </div>
+      <div class="userInfoBox" v-else>
+        <span>请登录</span>
+      </div>
+    </header>
     <div id="cont">
       <router-view/>
     </div>
@@ -20,6 +31,22 @@
 
 export default {
   name: 'App',
+  data () {
+    return {
+      // name: '',
+      // avatar: ''
+    }
+  },
+  computed: {
+    name () {
+      // let temp = this.$store.getters.getName
+      // if (temp) {}
+      return this.$store.getters.getName ? this.$store.getters.getName : ''
+    },
+    avatar: function () {
+      return this.$store.getters.getAvatar ? this.$store.getters.getAvatar : ''
+    }
+  },
   components: {
     // HelloWorld
   }
@@ -37,13 +64,32 @@ export default {
   margin: 0 auto
   max-width: 900px
 
-#nav
-  border: 2px solid #ccc
-  padding: 5px 10px
+.header
+  display: flex
+  justify-content: space-between
 
-  .navItem
-    margin-right: 8px
-    text-decoration: none
+  #nav
+    border: 2px solid #ccc
+    padding: 5px 10px
+    flex-grow: 1
+    display: flex
+    align-items: center
+    margin-right: 20px
 
+    .navItem
+      margin-right: 8px
+      text-decoration: none
+
+  .userInfoBox
+    display: flex
+    align-items: center
+
+    .name
+      font-size: 28px
+      margin-right: 6px
+
+    .avatar
+      width: 60px
+      border-radius: 100px
 
 </style>

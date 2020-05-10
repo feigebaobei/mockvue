@@ -2,7 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import index from '../page/index.vue'
 import login from '../page/login.vue'
-import content from '../page/content.vue'
+import cont from '../page/cont.vue'
+import pvdata from '../page/pvdata.vue'
+import staticp from '../page/staticp.vue'
 
 // const routerPush = VueRouter.prototype.push
 // VueRouter.prototype.push = function push(location) {
@@ -29,9 +31,19 @@ const routes = [
     component: login
   },
   {
-    path: '/content',
-    name: 'content',
-    component: content
+    path: '/cont',
+    name: 'cont',
+    component: cont
+  },
+  {
+    path: '/pvdata',
+    name: 'pvdata',
+    component: pvdata
+  },
+  {
+    path: '/staticp',
+    name: 'staticp',
+    component: staticp
   }
 ]
 const router = new VueRouter({

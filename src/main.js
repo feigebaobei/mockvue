@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 // import router from 'vue-router'
 import router from './router/index.js'
+import modules from './vuex/modules.js'
 
 Vue.config.productionTip = false // 是否启用生产环境的消息提示
 // Vue.config.productionTip = true
@@ -21,7 +22,7 @@ Vue.config.productionTip = false // 是否启用生产环境的消息提示
 
 new Vue({
   router,
-  // store,
+  store: modules,
   render: h => h(App)
 }).$mount('#app')
 // Vue.use(router)

@@ -1,5 +1,5 @@
 <template>
-  <div id="content">
+  <div id="cont">
     <h2>welcome to content page.</h2>
     <p>content of this page.</p>
   </div>
@@ -9,14 +9,14 @@
 // import HelloWorld from './components/HelloWorld.vue'
 
 export default {
-  name: 'content',
+  name: 'cont',
   components: {
     // HelloWorld
   }
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
   p
     font-size: 36px
     color: #ccc
