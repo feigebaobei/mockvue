@@ -5,6 +5,7 @@ import login from '../page/login.vue'
 import cont from '../page/cont.vue'
 import pvdata from '../page/pvdata.vue'
 import staticp from '../page/staticp.vue'
+import testTokenSDKClient from '../page/testTokenSDKClient.vue'
 
 // const routerPush = VueRouter.prototype.push
 // VueRouter.prototype.push = function push(location) {
@@ -44,6 +45,11 @@ const routes = [
     path: '/staticp',
     name: 'staticp',
     component: staticp
+  },
+  {
+    path: '/testTokenSDKClient',
+    name: 'testTokenSDKClient',
+    component: testTokenSDKClient
   }
 ]
 const router = new VueRouter({

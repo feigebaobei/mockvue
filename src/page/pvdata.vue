@@ -80,7 +80,7 @@
 <script>
 // import { basicvue } from '@/components/oasiscare'
 import instance from '@/lib/axiosInstance'
-// import tokenSDKServer from '../lib/tokenSDKServer.js'
+import tokenSDKClient from 'token-sdk-client'
 
 export default {
   props: {},
@@ -123,9 +123,13 @@ export default {
     // basicvue
   },
   methods: {
-    // init () {
-    //   this.getData()
-    // },
+    init () {
+      // this.getData()
+      this.fnTest()
+    },
+    fnTest() {
+      tokenSDKClient.main()
+    },
     // getData () {}
     getCheckCode (event) {
       // console.log(this)
@@ -168,7 +172,7 @@ export default {
       ]).then(([keyStoreCt, pvDataCt]) => {
         // 解密
         // 使用sm4、idpwd解密keyStoreCt
-        // let keyStore = tokenSDKServer.decryptKeyStore(keyStoreCt.data.data, this.formData.idpwd)
+        // let keyStore = tokenSDKClient.decryptKeyStore(keyStoreCt.data.data, this.formData.idpwd)
         let keyStore = keyStoreCt.data.data
         // 保存keyStore
         this.$store.dispatch('modifyKeyStore', {keyStore: keyStore}).catch((err) => {
@@ -177,7 +181,7 @@ export default {
         })
         // 解密
         // 使用sm2、私钥解密pvDataCt
-        // let pvData = tokenSDKServer.decryptPvData(pvDataCt.data.data, keyStore)
+        // let pvData = tokenSDKClient.decryptPvData(pvDataCt.data.data, keyStore)
         let pvData = pvDataCt.data.data
         // 保存pvData
         // this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {

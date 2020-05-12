@@ -7,7 +7,7 @@
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
-import tokenSDKServer from '../lib/tokenSDKServer.js'
+import tokenSDKClient from 'token-sdk-client'
 
 export default {
   name: 'index',
@@ -25,27 +25,13 @@ export default {
   },
   methods: {
     init () {
-      // console.log(tokenSDKServer)
-      // this.getData()
-      // tokenSDKServer.main()
-      // tokenSDKServer.decryptPvData(this.fdid, '01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a')
-      // tokenSDKServer.decryptPvData(this.udid, '01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a')
-      // tokenSDKServer.decryptPvData(this.keystore, '01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a')
-      // this.decrypt(this.fdid, '111111')
-      // this.decrypt(this.udid, '111111')
-      // this.decrypt(this.keystore, '111111')
-      // this.decrypt()
-      // tokenSDKServer.decryptPvData('f6d10d352134f2fb70506bee3f552d9d2d30a2f43f79effd15365b57351c85d857545b93c0eddd53bc779ca19dd276bd20a683043e3f5ec18cd6221490602eaae99784e69a7c0f6ed7caf13cbd1dbb7c64a4e8db13d65f4d399e39a8236b5be326499eba5cf4ef419060037436290bb0', '5090ffff751b0e1d2b6170d66b2e47a4fe74e91e15f3dfd5e6840361e1f7fca4') // 可以解密
-      let byte = tokenSDKServer.decryptPvData(this.qxct, '5090ffff751b0e1d2b6170d66b2e47a4fe74e91e15f3dfd5e6840361e1f7fca4')
-      console.log('mt', this.asciiToStr(byte))
+      // tokenSDKClient.decryptPvData('f6d10d352134f2fb70506bee3f552d9d2d30a2f43f79effd15365b57351c85d857545b93c0eddd53bc779ca19dd276bd20a683043e3f5ec18cd6221490602eaae99784e69a7c0f6ed7caf13cbd1dbb7c64a4e8db13d65f4d399e39a8236b5be326499eba5cf4ef419060037436290bb0', '5090ffff751b0e1d2b6170d66b2e47a4fe74e91e15f3dfd5e6840361e1f7fca4') // 可以解密
+      // let byte = 
+      // tokenSDKClient.decryptPvData(this.qxct, '5090ffff751b0e1d2b6170d66b2e47a4fe74e91e15f3dfd5e6840361e1f7fca4')
+      // console.log('mt', this.asciiToStr(byte))
+      tokenSDKClient.genKey('55c974f17a0b44178d982dcd478150b8a4c0f206f397d7880d06bf5a72932b81')
     },
     // getData () {}
-    // decrypt (ct, pwd) {
-    // // decrypt () {
-    //   let mt = tokenSDKServer.sm4.decrypt(ct, pwd)
-    //   console.log('mt', mt)
-    //   console.log('mt', tokenSDKServer.bytesToStrHex(mt))
-    // }
     asciiToStr(arr) {
       var str = ''
       for (var i = 0; i < arr.length; i++) {
