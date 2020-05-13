@@ -42,10 +42,14 @@ export default {
     name () {
       // let temp = this.$store.getters.getName
       // if (temp) {}
-      return this.$store.getters.getName ? this.$store.getters.getName : ''
+      // return this.$store.getters.getName ? this.$store.getters.getName : ''
+      let pvData = this.$store.getters.getPvData
+      return JSON.stringify(pvData) === '{}' ? '' : pvData.property.nickName
     },
     avatar: function () {
-      return this.$store.getters.getAvatar ? this.$store.getters.getAvatar : ''
+      let pvData = this.$store.getters.getPvData
+      return JSON.stringify(pvData) === '{}' ? '' : pvData.property.avatar
+      // return this.$store.getters.getAvatar ? this.$store.getters.getAvatar : ''
     }
   },
   components: {

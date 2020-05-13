@@ -63,7 +63,7 @@ export default {
     "version": "1588985429",
     "property": {
       "nickName": "hello",
-      "avatar": "URL"
+      "avatar": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589346378674&di=80fd25177b841c16cf2ec478de036b73&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201509%2F13%2F20150913231221_UzQr3.thumb.700_0.jpeg"
     },
     "submitCertifies": [{
       "id": "a68c5fd6d964575b3d42bf959",
@@ -100,3 +100,53 @@ export default {
 // 0xf6d10d352134f2fb70506bee3f552d9d2d30a2f43f79effd15365b57351c85d857545b93c0eddd53bc779ca19dd276bd20a683043e3f5ec18cd6221490602eaae99784e69a7c0f6ed7caf13cbd1dbb7c64a4e8db13d65f4d399e39a8236b5be326499eba5cf4ef419060037436290bb0
 
 // {'privatekey':'01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a'}
+
+// // udid的数据demo
+// {
+//   did: "did:ttm:u012345678a5201b690bf0b79eb715dad9ae7815efe9800998ecf8427e8d74",
+//   superDid："did:ttm:u012345695a5201b690bf0b79eb715dad9ae7815efe9800998ecf8427e8d74",
+//   phone: "18512345678",
+//   relationDid: [
+//     "did:ttm:a012340b95a5201b690bf0b79eb715dad9ae7815efe9800998ecf8427e8d74",
+//     "did:ttm:a012345678a5201b690bf0b79eb715dad9ae7815efe9800998ecf8427e8d74"
+//   ],
+//   subDid: {
+//     type: "a",
+//     did: "did:ttm:a012340b95a5201b690bf0b79eb715dad9ae7815efe9800998ecf8427e8d74",
+//     idpwd: "123456",
+//     relationDid: "did:ttm:f012340b95a5201b690bf0b79eb715dad9ae7815efe9800998ecf8427e8d74",
+//   },
+//   version: "1588985429",
+
+//   property: {
+//     name: "qwer",
+//     avatar: "URL"
+//   },
+//   idCeritfies: [
+//     {
+//       claim_sn: "12341234965eb72c92a549dd5a330112",
+//       certifyCategoryId: "1234qwertyuio",
+//       data: {
+//         name: "qwer",
+//         gender: "男"
+//       }
+//     }
+//   ],
+//   commonCertifies: [
+//     {
+//       claim_sn: "12345678965eb72c92a549dd5a330112",
+//       certifyCategoryId: "1234qwertyuio",
+//       data: {
+//         name: "qwer",
+//         gender: "男",
+//         birthday: "1588985429",
+//         school: "天津大学",
+//         major: "建筑系",
+//         grade: "5",
+//         serialNumber: "12345678"
+//       }
+//     }
+//   ],
+//   contacts: [],
+//   checkSignCertifies: ["12341234965eb72c92a549dd5a330112"],
+// }

@@ -56,6 +56,7 @@
 // import HelloWorld from './components/HelloWorld.vue'
 import instance from '@/lib/axiosInstance'
 import QRCode from 'qrcode'
+// import qs from 'qs'
 
 export default {
   name: 'Login',
@@ -100,9 +101,10 @@ export default {
           // console.log('success')
         })
         // 保存 sessionId / adid
-        this.$store.commit('modifyUuid', {uuid: res.data.uuid})
-        this.$store.dispatch('modifyAdid', {adid: res.data.adid})
-        this.$store.dispatch('modifyUdid', {udid: res.data.udid})
+        console.log('res', res)
+        this.$store.commit('modifyUuid', {uuid: res.data.data.uuid})
+        // this.$store.dispatch('modifyAdid', {adid: res.data.adid})
+        // this.$store.dispatch('modifyUdid', {udid: res.data.udid})
         // 轮询请求用户信息
         // this.reqUserInfoLoop()
       }).catch(error => {
@@ -114,8 +116,14 @@ export default {
       this.reqUserInfo().then(res => {
         // console.log('res', res)
         // 保存sessionId
-        this.$store.dispatch('modifyName', {name: res.data.name})
-        this.$store.dispatch('modifyAvatar', {avatar: res.data.avatar})
+        this.$store.dispatch('modifyUserInfo', {userInfo: {
+          nickName: res.data.data.nickName,
+          avatar: res.data.data.avatar,
+          udid: res.data.data.udid
+        }})
+        // this.$store.dispatch('modifyName', {nickName: res.data.data.nickName})
+        // this.$store.dispatch('modifyAvatar', {avatar: res.data.data.avatar})
+        // this.$store.dispatch('modifyUdid', {udid: res.data.data.udid})
         this.$router.push({
           path: '/'
         })
@@ -133,8 +141,8 @@ export default {
     // 请求 userInfo
     reqUserInfo () {
       return instance({
-        method: 'get',
         url: `/users/userInfo/${this.$store.getters.getUuid}`,
+        method: 'get',
       })
     },
     // 选择登录方式
@@ -166,7 +174,7 @@ export default {
       }).then(res => {
       // console.log(res)
         this.formData.udidList = res.data.data.udidList
-
+        alert('已得到did')
       }).catch(error => {
         console.log(error)
       })
@@ -193,6 +201,7 @@ export default {
         // this.$store.dispatch('modifyKeyStore', {keyStore: keyStoreCt.data.data}).catch((err) => {
           console.log(err)
         })
+        alert('已得到pvdata')
         // 解密
         // 使用sm2、私钥解密pvDataCt
         // let pvData = tokenSDKClient.decryptPvData(pvDataCt.data.data, keyStore)
@@ -231,25 +240,37 @@ export default {
         }
       })
     },
-    simulateLogin () {
+    simulateLogin (event) {
+      event.preventDefault()
       this.reqUserInfoLoop()
     },
     authUserInfo (event) {
       event.preventDefault()
       let pvData = this.$store.state.userInfo.pvData
+      let paui = this.formData.provideAuthUserInfoList
+      let data = {
+          name: paui.includes('name') ? pvData.property.nickName : '',
+          avatar: paui.includes('avatar') ? pvData.property.avatar : '',
+          udid: paui.includes('udid') ? pvData.did : ''
+          // udid: '2345tds'
+        }
       // 数据结构需要修改
       instance({
-        url: `/users/userInfo/receive`,
+        // url: '/users/userInfo/receive',
+        url: '/users/receive',
+        // url: '/users/phone/checkCode',
         method: 'post',
-        data: {
-          name: pvData.property.nickName,
-          avatar: pvData.property.avatar,
-          udid: pvData.did
-        }
-      }).then(res => {
+        // headers: {
+        //   "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+        // },
+        // data: qs.stringify(data)
+        data: data
+      }).then((res) => {
         console.log(res)
+        alert('已授权使用')
       }).catch(error => {
         console.log(error)
+        alert(error.message)
       })
     }
   },

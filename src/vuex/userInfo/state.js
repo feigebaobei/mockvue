@@ -6,6 +6,7 @@ const state = {
   // name: '',
   // avatar: '',
   // udid: '',
+  
   pvData: {
     property: {
       // nickName: '',

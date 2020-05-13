@@ -1,78 +1,73 @@
 <template>
   <div class="pvdata">
-    <section class="unlogined">
+    <section class="logined" v-if="hasPvData">
+      <p>这个页面一共有5个部分。</p>
+      <h3 class="title">用户属性</h3>
+      <section class="ui">
+        <p v-for="(value, item, index) in pvData.property" :key="index" class="item">
+          <span>{{item}}: </span>
+          <img class="avatar" :src="pvData.property.avatar" alt="" v-if="item === 'avatar'">
+          <span v-else>{{pvData.property[item]}}</span>
+        </p>
+      </section>
+      <h3 class="title">证书（身份证书、通用证书）</h3>
+      <section class="certifyItem">
+        <h4 class="title">{{certifyData.title}}</h4>
+        <p class="cont">{{certifyData.content}}</p>
+        <section class="qrBox">
+          <section class="item">
+            <canvas id="signQrMy" ref="signQrMy"></canvas>
+            <p>验证二维码</p>
+          </section>
+          <section class="item">
+            <canvas id="checkQrMy" ref="checkQrMy"></canvas>
+            <p>核验二维码</p>
+          </section>
+        </section>
+        <p>签名列表</p>
+        <p v-for="(item, index) in certifyData.signList" :key="index" class="signItem">
+          <span class="title">{{item.title}}</span>
+          <br>
+          <span class="sign">{{JSON.stringify(item.sign)}}</span>
+          <br>
+          <span class="expireTime">过期时间：{{item.endtime}}</span>
+        </p>
+      </section>
+      <h3 class="title">通讯录</h3>
+      <section>
+        <p v-for="(item, index) in pvData.contacts" :key="index">
+          <span>{{item.name}}: </span>
+          <span>{{item.phone}}</span>
+        </p>
+      </section>
+      <h3 class="title">验证过的证书</h3>
+      <section class="certifyItem">
+        <h4 class="title">{{checkSignCertifyData.title}}</h4>
+        <p class="cont">{{checkSignCertifyData.content}}</p>
+        <section class="qrBox">
+          <section class="item">
+            <canvas id="signQrC" ref="signQrC"></canvas>
+            <p>验证二维码</p>
+          </section>
+          <section class="item">
+            <canvas id="checkQrC" ref="checkQrC"></canvas>
+            <p>核验二维码</p>
+          </section>
+        </section>
+        <p>签名列表</p>
+        <p v-for="(item, index) in certifyData.signList" :key="index" class="signItem">
+          <span class="title">{{item.title}}</span>
+          <br>
+          <span class="sign">{{JSON.stringify(item.sign)}}</span>
+          <br>
+          <span class="expireTime">{{item.expireTime}}</span>
+        </p>
+      </section>
+      <button id="getPvDataBox" @click="getPvDataBox">刷新pvdata</button>
+    </section>
+    <section class="unlogined" v-else>
       <p>您没有拉取pvdata</p>
-      <p>输入信息后拉取pvdata</p>
-      <form action="#">
-        <div>
-          <label for="phone">手机号</label>
-          <input type="text" id="phone" name="phone" v-model="formData.phone">
-        </div>
-        <div>
-          <label for="checkCode">验证码</label>
-          <input type="text" id="checkCode" name="checkCode" v-model="formData.checkCode">
-        </div>
-        <div>
-          <button id="getCheckCode" @click="getCheckCode">获得验证码</button>
-        </div>
-        <div>
-          <button id="getUdidList" @click="getUdidList">请求udid列表</button>
-        </div>
-        <!-- <div class="udidBlocd"> -->
-          <div>
-            <label for="udid">udid</label>
-            <select name="udid" id="udid" v-model="formData.selectedUdid">
-              <option v-for="(item, index) in formData.udidList" :key="index" :value="item.udid">{{item.title}} {{item.udid}}</option>
-            </select>
-          </div>
-          <div>
-            <!-- <span>{{udid}}</span>
-            <span>{{udid}}</span> -->
-          </div>
-          <div>
-            <label for="idpwd">身份密码</label>
-            <input type="password" id="idpwd" name="idpwd" v-model="formData.idpwd">
-          </div>
-          <div>
-            <button id="getPvDataBox" @click="getPvDataBox">拉取pvdata</button>
-          </div>
-        <!-- </div> -->
-      </form>
-    </section>
-    <section class="logined"></section>
-    <section v-if="hasPvData">刷新pvdata</section>
-    <p>这个页面一共有5个部分。</p>
-    <h3 class="title">用户属性</h3>
-    <section class="ui">
-      <p v-for="(value, item, index) in pvData.property" :key="index">
-        <span>{{item}}: </span>
-        <span>{{pvData.property[item]}}</span>
-      </p>
-    </section>
-    <h3 class="title">证书（身份证书、通用证书）</h3>
-    <section class="certifyItem">
-      <h4 class="title">{{certifyData.title}}</h4>
-      <p class="cont">{{certifyData.content}}</p>
-    </section>
-    <h3 class="title">通讯录</h3>
-    <section>
-      <p>
-        <span>NAME0: </span>
-        <span>18512345678</span>
-      </p>
-      <p>
-        <span>NAME1: </span>
-        <span>18523456789</span>
-      </p>
-      <p>
-        <span>NAME2: </span>
-        <span>18534567890</span>
-      </p>
-    </section>
-    <h3 class="title">验证过的证书</h3>
-    <section class="certifyItem">
-      <h4 class="title">{{certifyData.title}}</h4>
-      <p class="cont">{{certifyData.content}}</p>
+      <button id="gotoLogin" @click="gotoLogin">去登录页面，拉取pvdata</button>
     </section>
   </div>
 </template>
@@ -80,7 +75,8 @@
 <script>
 // import { basicvue } from '@/components/oasiscare'
 import instance from '@/lib/axiosInstance'
-import tokenSDKClient from 'token-sdk-client'
+import QRCode from 'qrcode'
+// import tokenSDKClient from 'token-sdk-client'
 
 export default {
   props: {},
@@ -99,10 +95,12 @@ export default {
       certifyData: {
         title: '',
         content: '',
+        signList: []
       },
       checkSignCertifyData: {
         title: '',
-        content: ''
+        content: '',
+        signList: []
       }
     }
   },
@@ -125,48 +123,36 @@ export default {
   methods: {
     init () {
       // this.getData()
-      this.fnTest()
+      // this.fnTest()
+      // this.getPvDataBox()
+      if (this.pvData.submitCertifies) {
+        this.opCertify(this.pvData.submitCertifies[0], true)
+      }
+      if (this.pvData.validatedCertifies) {
+        this.opCertify(this.pvData.validatedCertifies[0], false)
+      }
     },
-    fnTest() {
-      tokenSDKClient.main()
-    },
-    // getData () {}
-    getCheckCode (event) {
-      // console.log(this)
-      event.preventDefault()
-      instance.get(`/node/vcode/${this.formData.phone}`).then(res => {
-        console.log(res)
-      }).catch(error => {
-        console.log(error)
+    gotoLogin () {
+      this.$router.push({
+        path: '/login'
       })
     },
-    getUdidList (event) {
-      event.preventDefault()
-      instance({
-        url: `/node/udidList`,
-        method: 'get',
-        data: {
-          phone: this.formData.phone,
-          checkCode: this.formData.checkCode
-        }
-      }).then(res => {
-      // console.log(res)
-        this.formData.udidList = res.data.data.udidList
-
-      }).catch(error => {
-        console.log(error)
-      })
-    },
+    // 请求私密数据
     getPvDataBox (event) {
-      console.log(this)
-      event.preventDefault()
+      // console.log(this)
+      // event.preventDefault()
+      if (event) {
+        event.preventDefault()
+      }
       Promise.all([
         instance({
-          url: `/did/keystore/${this.formData.selectedUdid}`,
+          // url: `/did/keystore/${this.formData.selectedUdid}`,
+          url: `/did/keystore/asdf`,
           method: 'get'
         }),
         instance({
-          url: `/did/pvdata/${this.formData.selectedUdid}`,
+          // url: `/did/pvdata/${this.formData.selectedUdid}`,
+          url: `/did/pvdata/asdf`,
           method: 'get'
         })
       ]).then(([keyStoreCt, pvDataCt]) => {
@@ -179,26 +165,32 @@ export default {
         // this.$store.dispatch('modifyKeyStore', {keyStore: keyStoreCt.data.data}).catch((err) => {
           console.log(err)
         })
+        alert('已得到pvdata')
         // 解密
         // 使用sm2、私钥解密pvDataCt
         // let pvData = tokenSDKClient.decryptPvData(pvDataCt.data.data, keyStore)
         let pvData = pvDataCt.data.data
+        console.log(pvData)
         // 保存pvData
         // this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {
         this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {
           this.$store.dispatch('modifyHasPvData', {hasPvData: true})
-          // 渲染我的证书
-          this.opCertify(pvData.submitCertifies, true)
-          // 渲染我验证过的证书
-          this.opCertify(pvData.validatedCertifies, false)
+          // // 渲染我的证书
+          this.opCertify(pvData.submitCertifies[0], true)
+          // // 渲染我验证过的证书
+          this.opCertify(pvData.validatedCertifies[0], false)
         }).catch((err) => {
           console.log(err)
         })
       })
     },
+    // 渲染证书
     opCertify (certify, bool) {
+      console.log('certify', certify)
+      // bool 是否是自己的证书
+      // 请求证书模板
       instance({
-        url: `/claim/template/${certify.templateId}`,
+        url: `/claim/template/${certify.id}`,
         method: 'get'
       }).then(res => {
         let data = res.data.data
@@ -211,16 +203,45 @@ export default {
         if (bool) {
           this.certifyData.title = data.title
           this.certifyData.content = desc
+          // 核验二维码
+          this.opQR('checkQrMy', certify.hashCont)
+          // 验证二维码
+          this.opQR('signQrMy', certify.id)
         } else {
           this.checkSignCertifyData.title = data.title
           this.checkSignCertifyData.content = desc
+          // 核验二维码
+          this.opQR('checkQrC', certify.hashCont)
+          // 验证二维码
+          this.opQR('signQrC', certify.id)
         }
+      })
+      // 请求证书签名列表
+      instance({
+        url: `/claim/fingerprint/${certify.id}`,
+        method: 'get'
+      }).then(res => {
+        this.certifyData.signList = res.data.data.signList
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    // 渲染二维码
+    opQR (ref, data) {
+      console.log('ref', ref, this.$refs[ref])
+      // console.log('ref', ref)
+      // QRCode.toCanvas(this.$refs["checkQrMy"], JSON.stringify(data), error => {
+      QRCode.toCanvas(this.$refs[`${ref}`], JSON.stringify(data), error => {
+        if (error) {
+          console.log('error', error)
+        }
+        // console.log('success')
       })
     }
   },
   created () {},
   mounted () {
-    // this.init()
+    this.init()
   }
 }
 </script>
@@ -229,9 +250,12 @@ export default {
 
   // .pvdata
   .certifyItem
-    width: 350px
+    width: 420px
     background: #ddd
     padding: 15px
+
+    .signItem
+      word-break: break-word
 
     .title
       text-align: center
@@ -239,5 +263,30 @@ export default {
       .cont
         // width: 350px
 
+    .qrBox
+      display: flex
+      justify-content: space-around
 
+      .item
+        p
+          text-align: center
+
+  .logined
+    .ui
+      .item
+        display: flex
+        align-items: center
+
+  .avatar
+    width: 100px
+
+  #gotoLogin
+  #getPvDataBox
+    margin: 16px 0
+    display: block
+    width: 160px
+    height: 40px
+    padding: 8px
+    // margin: 0 10px
+    border-radius: 8px
 </style>

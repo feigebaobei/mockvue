@@ -11,7 +11,7 @@ const mutations = {
   //   state.name = payload.name
   // },
   modifyName: (state, payload) => {
-    state.name = payload.name
+    state.nickName = payload.nickName
   },
   modifyAvatar: (state, payload) => {
     state.avatar = payload.avatar
@@ -19,8 +19,11 @@ const mutations = {
   modifyUdid: (state, payload) => {
     state.udid = payload.udid
   },
+  modifyUserInfo: (state, payload) => {
+    state.pvData.property = payload.userInfo
+  },
   modifyPvData: (state, payload) => {
-    console.log('payload', payload)
+    // console.log('payload', payload)
     state.pvData = payload.pvData
   },
   modifyKeyStore: (state, payload) => {
@@ -28,6 +31,9 @@ const mutations = {
   },
   modifyHasPvData: (state, payload) => {
     state.hasPvData = payload.hasPvData
-  }
+  },
+  // modifyUuid: (state, payload) => {
+  //   state.uuid = payload.uuid
+  // }
 }
 export default mutations

@@ -19,6 +19,9 @@ const actions = {
   },
   modifyHasPvData: ({commit}, payload) => {
     commit('modifyHasPvData', payload)
+  },
+  modifyUserInfo: ({commit}, payload) => {
+    commit('modifyUserInfo', payload)
   }
   // allData: (context) => {
   //   console.log(context)
