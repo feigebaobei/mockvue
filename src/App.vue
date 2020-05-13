@@ -10,7 +10,7 @@
         <router-link to="/login" class="navItem">login</router-link>
         <router-link to="/cont" class="navItem">content</router-link>
         <router-link to="/pvdata" class="navItem">pvdata</router-link>
-        <router-link to="/staticp" class="navItem">staticPage</router-link>
+        <!-- <router-link to="/staticp" class="navItem">staticPage</router-link> -->
         <router-link to="/testTokenSDKClient" class="navItem">testTokenSDKClient</router-link>
       </div>
       <div class="userInfoBox" v-if="name || avatar">

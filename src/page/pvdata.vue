@@ -1,9 +1,7 @@
 <template>
   <div class="pvdata">
-    <!-- <h2>基本样式</h2> -->
-    <!-- <basicvue></basicvue> -->
-    <section v-if="hasPvData">刷新pvdata</section>
-    <section>
+    <section class="unlogined">
+      <p>您没有拉取pvdata</p>
       <p>输入信息后拉取pvdata</p>
       <form action="#">
         <div>
@@ -41,6 +39,8 @@
         <!-- </div> -->
       </form>
     </section>
+    <section class="logined"></section>
+    <section v-if="hasPvData">刷新pvdata</section>
     <p>这个页面一共有5个部分。</p>
     <h3 class="title">用户属性</h3>
     <section class="ui">

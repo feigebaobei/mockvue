@@ -8,8 +8,8 @@ const state = {
   // udid: '',
   pvData: {
     property: {
-      nickName: '',
-      avatar: ''
+      // nickName: '',
+      // avatar: ''
     }
   },
   hasPvData: false,

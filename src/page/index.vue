@@ -1,13 +1,13 @@
 <template>
   <div id="index">
     <h2>welcome to index page.</h2>
-    <!-- <p>content of this page.</p> -->
+    <p>登录和未登录都可以访问首页的内容。</p>
   </div>
 </template>
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
-import tokenSDKClient from 'token-sdk-client'
+// import tokenSDKClient from 'token-sdk-client'
 
 export default {
   name: 'index',
@@ -29,7 +29,7 @@ export default {
       // let byte = 
       // tokenSDKClient.decryptPvData(this.qxct, '5090ffff751b0e1d2b6170d66b2e47a4fe74e91e15f3dfd5e6840361e1f7fca4')
       // console.log('mt', this.asciiToStr(byte))
-      tokenSDKClient.genKey('55c974f17a0b44178d982dcd478150b8a4c0f206f397d7880d06bf5a72932b81')
+      // tokenSDKClient.genKey('55c974f17a0b44178d982dcd478150b8a4c0f206f397d7880d06bf5a72932b81')
     },
     // getData () {}
     asciiToStr(arr) {

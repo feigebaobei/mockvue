@@ -6,32 +6,49 @@
       <button id="scan" @click="selectLoginMethod('scan')">扫码登录</button>
       <button id="udid" @click="selectLoginMethod('udid')">udid登录</button>
     </section>
-    <canvas id="canvas" ref="qr" v-show="this.loginMethod === 'scan'"></canvas>
-    <form action="#" v-show="this.loginMethod === 'udid'">
-      <div>
-        <label for="phone">手机号</label>
-        <input type="text" id="phone" name="phone">
-      </div>
-      <div>
-        <label for="checkCode">验证码</label>
-        <input type="text" id="checkCode" name="checkCode">
-      </div>
-      <div>
-        <button id="getCheckCode">获得验证码</button>
-      </div>
-      <div class="udidBlocd">
-        <div>
-          <label for="udid">udid</label>
-          <select name="udid" id="udid">
-            <option v-for="(udid, index) in this.formData.udid" :key="index" value="udid">{{udid}}</option>
+    <section class="scanLogin" v-show="this.loginMethod === 'scan'">
+      <canvas id="canvas" ref="qr"></canvas>
+      <button id="simulateLogin" @click="simulateLogin">模拟登录</button>
+    </section>
+    <section v-show="this.loginMethod === 'udid'">
+      <form action="#" class="formLogin" >
+        <div class="item">
+          <label for="phone" class="label">手机号</label>
+          <input type="text" id="phone" name="phone" class="input" v-model="formData.phone">
+        </div>
+        <div class="item">
+          <label for="checkCode" class="label">验证码</label>
+          <input type="text" id="checkCode" name="checkCode" class="input" v-model="formData.checkCode">
+          <button id="getCheckCode" @click="getCheckCode">获取验证码</button>
+        </div>
+        <div class="item">
+          <button class="button" @click="getUdidList">获取did</button>
+        </div>
+        <div class="item">
+          <label for="udid" class="label">udid</label>
+          <select name="udid" id="udid"  class="select" v-model="formData.selectedUdid">
+            <option v-for="(item, index) in this.formData.udidList" :key="index" :value="item.udid">{{item.title}} {{item.udid}}</option>
           </select>
         </div>
-        <div>
-          <label for="idpwd">身份密码</label>
-          <input type="password" id="idpwd" name="idpwd">
+        <div class="item">
+          <label for="idpwd" class="label">身份密码</label>
+          <input type="password" id="idpwd" name="idpwd" class="input" v-model="formData.idpwd">
         </div>
-      </div>
-    </form>
+        <div class="item">
+          <button class="button" @click="getPvDataBox">获取pvdata</button>
+        </div>
+      </form>
+      <p class="tip">登录时服务器需要您的这些数据：</p>
+      <form action="#" class="authForm">
+        <div class="item" v-for="(item, index) in formData.authUserInfoList" :key="index">
+          <label :for="item" class="label">{{item}}</label>
+          <input type="checkbox" :id="item" :name="item" class="checkbox" :value="item" v-model="formData.provideAuthUserInfoList">
+        </div>
+        <div class="item">
+          <button class="button" @click="authUserInfo">授权使用</button>
+        </div>
+      </form>
+    </section>
   </div>
 </template>
 
@@ -50,8 +67,14 @@ export default {
       formData: {
         phone: '',
         checkCode: '',
-        udid: [],
-        idpwd: ''
+        udidList: [{
+          title: '',
+          udid: ''
+        }],
+        selectedUdid: '',
+        idpwd: '',
+        authUserInfoList: [], //['name', 'avatar']
+        provideAuthUserInfoList: [],
       }
     }
   },
@@ -62,12 +85,13 @@ export default {
   methods: {
     init () {
       // console.log(this)
-      // this.getData()
+      this.getQRData()
     },
-    // getData () {
     // 请求qr data
     getQRData () {
       instance.get('/users/login/userInfo').then(res => {
+        this.hasRenderQR = true
+        this.formData.authUserInfoList = res.data.data.userInfoList
         // 渲染qr
         QRCode.toCanvas(this.$refs.qr, JSON.stringify(res.data), error => {
           if (error) {
@@ -80,7 +104,7 @@ export default {
         this.$store.dispatch('modifyAdid', {adid: res.data.adid})
         this.$store.dispatch('modifyUdid', {udid: res.data.udid})
         // 轮询请求用户信息
-        this.reqUserInfoLoop()
+        // this.reqUserInfoLoop()
       }).catch(error => {
         console.log('error', error)
       })
@@ -111,16 +135,122 @@ export default {
       return instance({
         method: 'get',
         url: `/users/userInfo/${this.$store.getters.getUuid}`,
-        body: 'uuid',
       })
     },
     // 选择登录方式
     selectLoginMethod (meth) {
       this.loginMethod = meth
-      if (!this.hasRenderQR) {
-        this.getQRData()
-        this.hasRenderQR = true
-      }
+      // if (!this.hasRenderQR) {
+      //   this.getQRData()
+      //   this.hasRenderQR = true
+      // }
+    },
+    getCheckCode (event) {
+      event.preventDefault()
+      instance.get(`/node/vcode/${this.formData.phone}`).then(res => {
+        console.log(res)
+        alert(`验证码是${res.data.data.checkCode}`)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getUdidList (event) {
+      event.preventDefault()
+      instance({
+        url: `/node/udidList`,
+        method: 'get',
+        params: {
+          phone: this.formData.phone,
+          checkCode: this.formData.checkCode
+        }
+      }).then(res => {
+      // console.log(res)
+        this.formData.udidList = res.data.data.udidList
+
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getPvDataBox (event) {
+      console.log(this)
+      event.preventDefault()
+      Promise.all([
+        instance({
+          url: `/did/keystore/${this.formData.selectedUdid}`,
+          method: 'get'
+        }),
+        instance({
+          url: `/did/pvdata/${this.formData.selectedUdid}`,
+          method: 'get'
+        })
+      ]).then(([keyStoreCt, pvDataCt]) => {
+        // 解密
+        // 使用sm4、idpwd解密keyStoreCt
+        // let keyStore = tokenSDKClient.decryptKeyStore(keyStoreCt.data.data, this.formData.idpwd)
+        let keyStore = keyStoreCt.data.data
+        // 保存keyStore
+        this.$store.dispatch('modifyKeyStore', {keyStore: keyStore}).catch((err) => {
+        // this.$store.dispatch('modifyKeyStore', {keyStore: keyStoreCt.data.data}).catch((err) => {
+          console.log(err)
+        })
+        // 解密
+        // 使用sm2、私钥解密pvDataCt
+        // let pvData = tokenSDKClient.decryptPvData(pvDataCt.data.data, keyStore)
+        let pvData = pvDataCt.data.data
+        // 保存pvData
+        // this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {
+        this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {
+          this.$store.dispatch('modifyHasPvData', {hasPvData: true})
+          // // 渲染我的证书
+          // this.opCertify(pvData.submitCertifies, true)
+          // // 渲染我验证过的证书
+          // this.opCertify(pvData.validatedCertifies, false)
+        }).catch((err) => {
+          console.log(err)
+        })
+      })
+    },
+    opCertify (certify, bool) {
+      instance({
+        url: `/claim/template/${certify.templateId}`,
+        method: 'get'
+      }).then(res => {
+        let data = res.data.data
+        let desc = data.desc
+        for (let key in data.data) {
+          let str = '\\$' + key + '\\$'
+          let reg = new RegExp(str, 'gm')
+          desc = desc.replace(reg, data.data[key])
+        }
+        if (bool) {
+          this.certifyData.title = data.title
+          this.certifyData.content = desc
+        } else {
+          this.checkSignCertifyData.title = data.title
+          this.checkSignCertifyData.content = desc
+        }
+      })
+    },
+    simulateLogin () {
+      this.reqUserInfoLoop()
+    },
+    authUserInfo (event) {
+      event.preventDefault()
+      let pvData = this.$store.state.userInfo.pvData
+      // 数据结构需要修改
+      instance({
+        url: `/users/userInfo/receive`,
+        method: 'post',
+        data: {
+          name: pvData.property.nickName,
+          avatar: pvData.property.avatar,
+          udid: pvData.did
+        }
+      }).then(res => {
+        console.log(res)
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   created () {},
@@ -144,4 +274,60 @@ export default {
       padding: 8px
       margin: 0 10px
       border-radius: 8px
+
+  #simulateLogin
+    margin: 16px 0
+    display: block
+    width: 120px
+    height: 40px
+    padding: 8px
+    margin: 0 10px
+    border-radius: 8px
+
+  .formLogin
+  .authForm
+    width: 360px
+
+    .item
+      width: 100%
+      display: flex
+      align-items: center
+      margin-bottom: 10px
+
+      .label
+        margin-right: 6px
+
+      .input
+      .select
+        flex-grow: 1
+        height: 28px
+
+      .button
+        width: 100%
+        height: 34px
+        padding: 8px
+        border-radius: 8px
+        margin-bottom: 15px
+
+      #getCheckCode
+        width: 120px
+        padding: 8px
+        margin: 0 10px
+        border-radius: 8px
+
+  .tip
+    font-size: 22px
+    margin-bottom: 0
+
+  .authForm
+    margin-bottom: 60px
+
+    .item
+      display: flex
+      justify-content: space-between
+
+      .checkbox
+        width: 28px
+        height: 28px
+
 </style>
