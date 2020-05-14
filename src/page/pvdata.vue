@@ -76,7 +76,7 @@
 // import { basicvue } from '@/components/oasiscare'
 import instance from '@/lib/axiosInstance'
 import QRCode from 'qrcode'
-// import tokenSDKClient from 'token-sdk-client'
+import tokenSDKClient from 'token-sdk-client'
 
 export default {
   props: {},
@@ -113,6 +113,9 @@ export default {
       // console.log(a)
       return this.$store.state.userInfo.pvData
     },
+    keyStore () {
+      return this.$store.getters.getKeyStore
+    },
     // ui () {
     //   this.pvData.
     // }
@@ -144,49 +147,19 @@ export default {
       if (event) {
         event.preventDefault()
       }
-      Promise.all([
-        instance({
-          // url: `/did/keystore/${this.formData.selectedUdid}`,
-          url: `/did/keystore/asdf`,
-          method: 'get'
-        }),
-        instance({
-          // url: `/did/pvdata/${this.formData.selectedUdid}`,
-          url: `/did/pvdata/asdf`,
-          method: 'get'
-        })
-      ]).then(([keyStoreCt, pvDataCt]) => {
-        // 解密
-        // 使用sm4、idpwd解密keyStoreCt
-        // let keyStore = tokenSDKClient.decryptKeyStore(keyStoreCt.data.data, this.formData.idpwd)
-        let keyStore = keyStoreCt.data.data
-        // 保存keyStore
-        this.$store.dispatch('modifyKeyStore', {keyStore: keyStore}).catch((err) => {
-        // this.$store.dispatch('modifyKeyStore', {keyStore: keyStoreCt.data.data}).catch((err) => {
-          console.log(err)
-        })
-        alert('已得到pvdata')
-        // 解密
-        // 使用sm2、私钥解密pvDataCt
-        // let pvData = tokenSDKClient.decryptPvData(pvDataCt.data.data, keyStore)
-        let pvData = pvDataCt.data.data
-        console.log(pvData)
-        // 保存pvData
-        // this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {
-        this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {
-          this.$store.dispatch('modifyHasPvData', {hasPvData: true})
-          // // 渲染我的证书
-          this.opCertify(pvData.submitCertifies[0], true)
-          // // 渲染我验证过的证书
-          this.opCertify(pvData.validatedCertifies[0], false)
-        }).catch((err) => {
-          console.log(err)
-        })
+      tokenSDKClient.getPvData(this.pvData.did).then(res => {
+        let pvData = tokenSDKClient.decryptPvData(res.data.data, this.keyStore.privatekey)
+        return pvData
+      }).then(res => {
+        console.log('res', res)
+        return this.$store.dispatch('modifyPvData', {pvData: res})
+      }).catch(err => {
+        console.log('err', err)
       })
     },
     // 渲染证书
     opCertify (certify, bool) {
-      console.log('certify', certify)
+      // console.log('certify', certify)
       // bool 是否是自己的证书
       // 请求证书模板
       instance({
@@ -228,7 +201,7 @@ export default {
     },
     // 渲染二维码
     opQR (ref, data) {
-      console.log('ref', ref, this.$refs[ref])
+      // console.log('ref', ref, this.$refs[ref])
       // console.log('ref', ref)
       // QRCode.toCanvas(this.$refs["checkQrMy"], JSON.stringify(data), error => {
       QRCode.toCanvas(this.$refs[`${ref}`], JSON.stringify(data), error => {
