@@ -125,6 +125,8 @@ export default {
       tokenSDKClient.getPvData('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')
       tokenSDKClient.getKeyStore(encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608'))
       tokenSDKClient.getPvData(encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608'))
+      tokenSDKClient.getKeyStore('922731094502ebffdf1f10389608')
+      tokenSDKClient.getPvData('922731094502ebffdf1f10389608')
 
 
       // let keyes = tokenSDKClient.sm2.genKeyPair(this.keyStore.privatekey)
