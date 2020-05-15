@@ -10,7 +10,7 @@
 <script>
 // import { basicvue } from '@/components/oasiscare'
 import tokenSDKClient from 'token-sdk-client'
-import instance from '@/lib/axiosInstance'
+import api from '@/lib/axiosInstance'
 
 export default {
   props: {},
@@ -89,7 +89,7 @@ export default {
       // tokenSDKClient.main()
       // console.log('end')
       // tokenSDKClient.test1()
-      // instance({
+      // api({
       //   url: `/did/keystore/${this.test.did}`,
       //   method: 'get'
       // }).then(res => {
@@ -107,7 +107,7 @@ export default {
       // }).catch(err => {
       //   console.log('err', err)
       // })
-      instance({
+      api({
         // url: `/did/pvdata/${this.pvData.did}`,
         url: `/did/pvdata/ZGlkOnR0bTp1MDQzODI5NjgxZTkyMjczMTA5NDUwMmViZmZkZjFmMTAzODljM2FkMTFjOGE2Nzg0N2M2OGYwNDgyZTYwOA==`,
         method: 'get'
@@ -117,9 +117,9 @@ export default {
       }).catch(err => {
         console.log('err', err)
       })
-      instance.get(`/did/keystore/did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608`)
-      instance.get(`/did/pvdata/did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608`)
-      instance.get(`/did/pvdata/${encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')}`)
+      api.get(`/did/keystore/did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608`)
+      api.get(`/did/pvdata/did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608`)
+      api.get(`/did/pvdata/${encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')}`)
 
       tokenSDKClient.getKeyStore('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')
       tokenSDKClient.getPvData('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')
