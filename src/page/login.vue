@@ -183,6 +183,8 @@ export default {
       event.preventDefault()
       Promise.all([
         tokenSDKClient.getKeyStore(this.formData.selectedUdid),
+        // tokenSDKClient.getKeyStore('2345trew'),
+        // tokenSDKClient.getPvData('2345trew')
         tokenSDKClient.getPvData(this.formData.selectedUdid)
         // instance({
         //   url: `/did/keystore/${this.formData.selectedUdid}`,

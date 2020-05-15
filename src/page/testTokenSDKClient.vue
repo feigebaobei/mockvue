@@ -1,13 +1,15 @@
 <template>
   <div class="testTokenSDKClient">
     <h2>测试 tokenSDKClient</h2>
+    <button @click="fn">click</button>
+    <button @click="getDidList">getDidList</button>
     <!-- <basicvue></basicvue> -->
   </div>
 </template>
 
 <script>
 // import { basicvue } from '@/components/oasiscare'
-// import tokenSDKClient from 'token-sdk-client'
+import tokenSDKClient from 'token-sdk-client'
 import instance from '@/lib/axiosInstance'
 
 export default {
@@ -106,14 +108,23 @@ export default {
       //   console.log('err', err)
       // })
       instance({
-        url: `/did/pvdata/${this.pvData.did}`,
+        // url: `/did/pvdata/${this.pvData.did}`,
+        url: `/did/pvdata/ZGlkOnR0bTp1MDQzODI5NjgxZTkyMjczMTA5NDUwMmViZmZkZjFmMTAzODljM2FkMTFjOGE2Nzg0N2M2OGYwNDgyZTYwOA==`,
         method: 'get'
       }).then(res => {
         console.log('res', res)
-        
+
       }).catch(err => {
         console.log('err', err)
       })
+      instance.get(`/did/keystore/did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608`)
+      instance.get(`/did/pvdata/did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608`)
+      instance.get(`/did/pvdata/${encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')}`)
+
+      tokenSDKClient.getKeyStore('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')
+      tokenSDKClient.getPvData('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')
+      tokenSDKClient.getKeyStore(encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608'))
+      tokenSDKClient.getPvData(encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608'))
 
 
       // let keyes = tokenSDKClient.sm2.genKeyPair(this.keyStore.privatekey)
@@ -131,11 +142,20 @@ export default {
       // console.log('encryptData', encryptData)
     },
     // getData () {}
+    fn () {
+      this.init()
+    },
+    getDidList () {
+      tokenSDKClient.getDidList('123456543').then(res => {
+        console.log('res', res)
+      }).catch(err => {
+        console.log('err', err)
+      })
+    }
   },
   created () {},
   mounted () {
-     console.log(this)
-    this.init()
+    // this.init()
   }
 }
 </script>
