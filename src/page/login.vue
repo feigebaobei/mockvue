@@ -155,7 +155,9 @@ export default {
     },
     getCheckCode (event) {
       event.preventDefault()
-      instance.get(`/node/vcode/${this.formData.phone}`).then(res => {
+      // instance.get(`/node/vcode/${this.formData.phone}`)
+      tokenSDKClient.getCheckCode(this.formData.phone)
+      .then(res => {
         console.log(res)
         alert(`验证码是${res.data.data.checkCode}`)
       }).catch(error => {

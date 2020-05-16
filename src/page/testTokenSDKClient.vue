@@ -10,7 +10,7 @@
 <script>
 // import { basicvue } from '@/components/oasiscare'
 import tokenSDKClient from 'token-sdk-client'
-import api from '@/lib/axiosInstance'
+// import api from '@/lib/axiosInstance'
 
 export default {
   props: {},
@@ -107,24 +107,24 @@ export default {
       // }).catch(err => {
       //   console.log('err', err)
       // })
-      api({
-        // url: `/did/pvdata/${this.pvData.did}`,
-        url: `/did/pvdata/ZGlkOnR0bTp1MDQzODI5NjgxZTkyMjczMTA5NDUwMmViZmZkZjFmMTAzODljM2FkMTFjOGE2Nzg0N2M2OGYwNDgyZTYwOA==`,
-        method: 'get'
-      }).then(res => {
-        console.log('res', res)
+      // api({
+      //   // url: `/did/pvdata/${this.pvData.did}`,
+      //   url: `/did/pvdata/ZGlkOnR0bTp1MDQzODI5NjgxZTkyMjczMTA5NDUwMmViZmZkZjFmMTAzODljM2FkMTFjOGE2Nzg0N2M2OGYwNDgyZTYwOA==`,
+      //   method: 'get'
+      // }).then(res => {
+      //   console.log('res', res)
 
-      }).catch(err => {
-        console.log('err', err)
-      })
-      api.get(`/did/keystore/did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608`)
-      api.get(`/did/pvdata/did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608`)
-      api.get(`/did/pvdata/${encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')}`)
+      // }).catch(err => {
+      //   console.log('err', err)
+      // })
+      // api.get(`/did/keystore/did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608`)
+      // api.get(`/did/pvdata/did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608`)
+      // api.get(`/did/pvdata/${encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')}`)
 
-      tokenSDKClient.getKeyStore('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')
-      tokenSDKClient.getPvData('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')
-      tokenSDKClient.getKeyStore(encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608'))
-      tokenSDKClient.getPvData(encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608'))
+      // tokenSDKClient.getKeyStore('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')
+      // tokenSDKClient.getPvData('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608')
+      // tokenSDKClient.getKeyStore(encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608'))
+      // tokenSDKClient.getPvData(encodeURIComponent('did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608'))
       tokenSDKClient.getKeyStore('922731094502ebffdf1f10389608')
       tokenSDKClient.getPvData('922731094502ebffdf1f10389608')
 
@@ -148,11 +148,12 @@ export default {
       this.init()
     },
     getDidList () {
-      tokenSDKClient.getDidList('123456543').then(res => {
-        console.log('res', res)
-      }).catch(err => {
-        console.log('err', err)
-      })
+      console.log(tokenSDKClient.getDidList('123456543'))
+      // tokenSDKClient.getDidList('123456543').then(res => {
+      //   console.log('res', res)
+      // }).catch(err => {
+      //   console.log('err', err)
+      // })
     }
   },
   created () {},
