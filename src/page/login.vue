@@ -216,6 +216,7 @@ export default {
         // 保存pvData
         // this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {
         this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {
+          // console.log('pvData', pvData)
           this.$store.dispatch('modifyHasPvData', {hasPvData: true})
           // // 渲染我的证书
           // this.opCertify(pvData.submitCertifies, true)
@@ -277,64 +278,6 @@ export default {
   created () {},
   mounted () {
     this.init()
-    // tokenSDKClient.test0()
-    // let data = {
-    //     "did": "did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608",
-    //     "phone": "15652684614",
-    //     "subDids": [{
-    //         "did": "did:ttm:f08ae17a9f890e251f51d161c3d7e064a742714522c8a67847c68f0482a796",
-    //         "idpwd": "111111",
-    //         "relationDid": "did:ttm:a0_app_001_did",
-    //         "type": "f"
-    //     }],
-    //     "version": "1588985429",
-    //     "property": {
-    //         "nickName": "tank",
-    //         "avatar": "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1718143317,3612074652&fm=26&gp=0.jpg"
-    //     },
-    //     "submitCertifies": [{
-    //         "id": "a68c5fd6d964575b3d42bf959",
-    //         "type": "validated",
-    //         "templateId": "t001",
-    //         "templateTitle": "荣誉证书",
-    //         "hashCont": "dad9ae7815efe9800998ecf8427e8d74",
-    //         "content": {
-    //             "name": "abc",
-    //             "age": "18"
-    //         }
-    //     }],
-    //     "contacts": [{
-    //             "name": "first",
-    //             "phone": "18512345678"
-    //         },
-    //         {
-    //             "name": "second",
-    //             "phone": "18523456789"
-    //         },
-    //         {
-    //             "name": "third",
-    //             "phone": "18534567890"
-    //         }
-    //     ],
-    //     "validatedCertifies": [{
-    //         "id": "a68c5fd6d964575b3d42bf959",
-    //         "type": "validated",
-    //         "templateId": "t001",
-    //         "templateTitle": "荣誉证书",
-    //         "hashCont": "dad9ae7815efe9800998ecf8427e8d74",
-    //         "content": {
-    //             "name": "abc",
-    //             "age": "18"
-    //         }
-    //     }]
-    // }
-    // let keyes = tokenSDKClient.sm2.genKeyPair('01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a')
-    // let dataStr = JSON.stringify(data)
-    // console.log('dataStr', dataStr)
-    // let ct = keyes.encrypt(dataStr)
-    // console.log('ct', ct, `[${ct.join(', ')}]`)
-    // let mt = keyes.decrypt(ct)
-    // console.log('mt', mt)
   }
 }
 </script>
