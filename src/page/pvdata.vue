@@ -109,8 +109,6 @@ export default {
       return this.$store.state.userInfo.hasPvData
     },
     pvData () {
-      // let a = this.$store.state.userInfo.pvData
-      // console.log(a)
       return this.$store.state.userInfo.pvData
     },
     keyStore () {
@@ -125,9 +123,6 @@ export default {
   },
   methods: {
     init () {
-      // this.getData()
-      // this.fnTest()
-      // this.getPvDataBox()
       if (this.pvData.submitCertifies) {
         this.opCertify(this.pvData.submitCertifies[0], true)
       }
@@ -142,8 +137,6 @@ export default {
     },
     // 请求私密数据
     getPvDataBox (event) {
-      // console.log(this)
-      // event.preventDefault()
       if (event) {
         event.preventDefault()
       }
@@ -151,8 +144,10 @@ export default {
         let pvData = tokenSDKClient.decryptPvData(res.data.data, this.keyStore.privatekey)
         return pvData
       }).then(res => {
-        console.log('res', res)
-        return this.$store.dispatch('modifyPvData', {pvData: res})
+        // console.log('res', res)
+        this.$store.dispatch('modifyPvData', {pvData: res})
+        this.init()
+        // return res
       }).catch(err => {
         console.log('err', err)
       })
@@ -201,9 +196,6 @@ export default {
     },
     // 渲染二维码
     opQR (ref, data) {
-      // console.log('ref', ref, this.$refs[ref])
-      // console.log('ref', ref)
-      // QRCode.toCanvas(this.$refs["checkQrMy"], JSON.stringify(data), error => {
       QRCode.toCanvas(this.$refs[`${ref}`], JSON.stringify(data), error => {
         if (error) {
           console.log('error', error)
