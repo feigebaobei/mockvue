@@ -10,8 +10,9 @@
           <span v-else>{{pvData.property[item]}}</span>
         </p>
       </section>
-      <h3 class="title">证书（身份证书、通用证书）</h3>
-      <section class="certifyItem">
+      <!-- <h3 class="title">证书（身份证书、通用证书）</h3> -->
+      <h3 class="title">验证过的证书 通用证书</h3>
+      <!-- <section class="certifyItem">
         <h4 class="title">{{certifyData.title}}</h4>
         <p class="cont">{{certifyData.content}}</p>
         <section class="qrBox">
@@ -32,6 +33,15 @@
           <br>
           <span class="expireTime">过期时间：{{item.endtime}}</span>
         </p>
+      </section> -->
+      <section class="certifyBox">
+        <section class="certifyItem" v-for="(item, index) in pvData.manageCertifies" :key="index">
+          <div class="left">
+            <h4 class="title">{{item.templateTitle}}</h4>
+            <p>{{item.claim_sn}}</p>
+          </div>
+          <img :src="arrows" alt="" class="right">
+        </section>
       </section>
       <h3 class="title">通讯录</h3>
       <section>
@@ -40,28 +50,16 @@
           <span>{{item.phone}}</span>
         </p>
       </section>
-      <h3 class="title">验证过的证书</h3>
-      <section class="certifyItem">
-        <h4 class="title">{{checkSignCertifyData.title}}</h4>
-        <p class="cont">{{checkSignCertifyData.content}}</p>
-        <section class="qrBox">
-          <section class="item">
-            <canvas id="signQrC" ref="signQrC"></canvas>
-            <p>验证二维码</p>
-          </section>
-          <section class="item">
-            <canvas id="checkQrC" ref="checkQrC"></canvas>
-            <p>核验二维码</p>
-          </section>
+      <!-- <h3 class="title">验证过的证书</h3> -->
+      <h3 class="title">身份证书</h3>
+      <section class="certifyBox">
+        <section class="certifyItem" v-for="(item, index) in pvData.identityCertifies" :key="index">
+          <div class="left">
+            <h4 class="title">{{item.templateTitle}}</h4>
+            <p>{{item.claim_sn}}</p>
+          </div>
+          <img :src="arrows" alt="" class="right">
         </section>
-        <p>签名列表</p>
-        <p v-for="(item, index) in certifyData.signList" :key="index" class="signItem">
-          <span class="title">{{item.title}}</span>
-          <br>
-          <span class="sign">{{JSON.stringify(item.sign)}}</span>
-          <br>
-          <span class="expireTime">{{item.expireTime}}</span>
-        </p>
       </section>
       <button id="getPvDataBox" @click="getPvDataBox">刷新pvdata</button>
     </section>
@@ -74,14 +72,16 @@
 
 <script>
 // import { basicvue } from '@/components/oasiscare'
-import instance from '@/lib/axiosInstance'
-import QRCode from 'qrcode'
+// import instance from '@/lib/axiosInstance'
+// import QRCode from 'qrcode'
 import tokenSDKClient from 'token-sdk-client'
+import arrows from '@/lib/images/arrows.png'
 
 export default {
   props: {},
   data () {
     return {
+      arrows: arrows,
       formData: {
         phone: '12345',
         checkCode: '2456',
@@ -101,16 +101,20 @@ export default {
         title: '',
         content: '',
         signList: []
-      }
+      },
+      // manageCertifies: [],
+      pvData: this.$store.state.userInfo.pvData,
     }
   },
   computed: {
     hasPvData () {
       return this.$store.state.userInfo.hasPvData
     },
-    pvData () {
-      return this.$store.state.userInfo.pvData
-    },
+    // pvData () {
+    //   let temp = this.$store.state.userInfo.pvData
+    //   // this.manageCertifies = temp.manageCertifies
+    //   return temp
+    // },
     keyStore () {
       return this.$store.getters.getKeyStore
     },
@@ -122,14 +126,8 @@ export default {
     // basicvue
   },
   methods: {
-    init () {
-      if (this.pvData.submitCertifies) {
-        this.opCertify(this.pvData.submitCertifies[0], true)
-      }
-      if (this.pvData.validatedCertifies) {
-        this.opCertify(this.pvData.validatedCertifies[0], false)
-      }
-    },
+    // init () {
+    // },
     gotoLogin () {
       this.$router.push({
         path: '/login'
@@ -144,86 +142,87 @@ export default {
         let pvData = tokenSDKClient.decryptPvData(res.data.data, this.keyStore.privatekey)
         return pvData
       }).then(res => {
-        // console.log('res', res)
         this.$store.dispatch('modifyPvData', {pvData: res})
-        this.init()
-        // return res
+        // this.init()
       }).catch(err => {
         console.log('err', err)
       })
     },
     // 渲染证书
-    opCertify (certify, bool) {
-      // console.log('certify', certify)
-      // bool 是否是自己的证书
-      // 请求证书模板
-      instance({
-        url: `/claim/template/${certify.id}`,
-        method: 'get'
-      }).then(res => {
-        let data = res.data.data
-        let desc = data.desc
-        for (let key in data.data) {
-          let str = '\\$' + key + '\\$'
-          let reg = new RegExp(str, 'gm')
-          desc = desc.replace(reg, data.data[key])
-        }
-        if (bool) {
-          this.certifyData.title = data.title
-          this.certifyData.content = desc
-          // 核验二维码
-          this.opQR('checkQrMy', certify.hashCont)
-          // 验证二维码
-          this.opQR('signQrMy', certify.id)
-        } else {
-          this.checkSignCertifyData.title = data.title
-          this.checkSignCertifyData.content = desc
-          // 核验二维码
-          this.opQR('checkQrC', certify.hashCont)
-          // 验证二维码
-          this.opQR('signQrC', certify.id)
-        }
-      })
-      // 请求证书签名列表
-      instance({
-        url: `/claim/fingerprint/${certify.id}`,
-        method: 'get'
-      }).then(res => {
-        this.certifyData.signList = res.data.data.signList
-      }).catch(err => {
-        console.log(err)
-      })
+    // opCertify (certify, bool) {
+    //   console.log('certify', certify)
+    //   // bool 是否是自己的证书
+    //   // 请求证书模板
+    //   tokenSDKClient.getTemplate(certify.templateId)
+    //   .then(res => {
+    //     // let data = res.data.data
+    //     let data = this.pvData.property
+    //     let desc = res.data.data.desc
+    //     for (let key in data.data) {
+    //       let str = '\\$' + key + '\\$'
+    //       let reg = new RegExp(str, 'gm')
+    //       desc = desc.replace(reg, data.data[key])
+    //     }
+    //     if (bool) {
+    //       this.certifyData.title = data.title
+    //       // this.certifyData.content = desc
+    //       this.certifyData.content = this.opCont(desc, data)
+    //       // 核验二维码
+    //       this.opQR('checkQrMy', certify.hashCont)
+    //       // 验证二维码
+    //       this.opQR('signQrMy', certify.id)
+    //     } else {
+    //       this.checkSignCertifyData.title = data.title
+    //       this.checkSignCertifyData.content = desc
+    //       // 核验二维码
+    //       this.opQR('checkQrC', certify.hashCont)
+    //       // 验证二维码
+    //       this.opQR('signQrC', certify.id)
+    //     }
+    //   })
+    //   // 请求证书签名列表
+    //   // instance({
+    //   //   url: `/claim/fingerprint`,
+    //   //   method: 'get',
+    //   //   params: {
+    //   //     claimsn: ''
+    //   //   }
+    //   // })
+    //   tokenSDKClient.getCertifyFingerPrint(certify.id)
+    //   .then(res => {
+    //     this.certifyData.signList = res.data.data.signList
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
+    // },
+    opCont (desc, data) {
+      for (let [key, value] of Object.entries(data)) {
+        let reg = new RegExp(`\\$${key}\\$`, 'gm')
+        desc = desc.replace(reg, value)
+      }
+      return desc
     },
     // 渲染二维码
-    opQR (ref, data) {
-      QRCode.toCanvas(this.$refs[`${ref}`], JSON.stringify(data), error => {
-        if (error) {
-          console.log('error', error)
-        }
-        // console.log('success')
-      })
-    }
+    // opQR (ref, data) {
+    //   QRCode.toCanvas(this.$refs[`${ref}`], JSON.stringify(data), error => {
+    //     if (error) {
+    //       console.log('error', error)
+    //     }
+    //     // console.log('success')
+    //   })
+    // }
   },
   created () {},
   mounted () {
-    this.init()
+    // this.init()
   }
 }
 </script>
 
 <style lang="stylus" scoped>
 
-  // .pvdata
-  .certifyItem
-    width: 420px
-    background: #ddd
-    padding: 15px
-
     .signItem
       word-break: break-word
-
-    .title
-      text-align: center
 
       .cont
         // width: 350px
@@ -254,4 +253,18 @@ export default {
     padding: 8px
     // margin: 0 10px
     border-radius: 8px
+
+  .certifyBox
+    .certifyItem
+      display: flex
+      justify-content: space-around
+      width: 420px
+      padding: 15px
+      background: #f1f1f1
+      margin: 0 0 6px 0
+
+      .left
+        flex-grow: 1
+      .right
+        flex-grow: 0
 </style>

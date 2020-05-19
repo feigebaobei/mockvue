@@ -6,6 +6,11 @@ import cont from '../page/cont.vue'
 import pvdata from '../page/pvdata.vue'
 import staticp from '../page/staticp.vue'
 import testTokenSDKClient from '../page/testTokenSDKClient.vue'
+import certifyList from '../page/certifyList.vue'
+import applyCertify from '../page/applyCertify.vue'
+import certifyOfServer from '../page/certifyOfServer.vue'
+import toSignCertify from '../page/toSignCertify.vue'
+import uploadDidttm from '../page/uploadDidttm.vue'
 
 // const routerPush = VueRouter.prototype.push
 // VueRouter.prototype.push = function push(location) {
@@ -50,6 +55,31 @@ const routes = [
     path: '/testTokenSDKClient',
     name: 'testTokenSDKClient',
     component: testTokenSDKClient
+  },
+  {
+    path: '/applyCertify',
+    name: 'applyCertify',
+    component: applyCertify
+  },
+  {
+    path: '/certifyList',
+    name: 'certifyList',
+    component: certifyList
+  },
+  {
+    path: '/certifyOfServer',
+    name: 'certifyOfServer',
+    component: certifyOfServer
+  },
+  {
+    path: '/toSignCertify',
+    name: 'toSignCertify',
+    component: toSignCertify
+  },
+  {
+    path: '/uploadDidttm',
+    name: 'uploadDidttm',
+    component: uploadDidttm
   }
 ]
 const router = new VueRouter({

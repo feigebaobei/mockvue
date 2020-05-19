@@ -155,7 +155,6 @@ export default {
     },
     getCheckCode (event) {
       event.preventDefault()
-      // instance.get(`/node/vcode/${this.formData.phone}`)
       tokenSDKClient.getCheckCode(this.formData.phone)
       .then(res => {
         console.log(res)
@@ -166,14 +165,9 @@ export default {
     },
     getUdidList (event) {
       event.preventDefault()
-      instance({
-        url: `/node/udidList`,
-        method: 'get',
-        params: {
-          phone: this.formData.phone,
-          checkCode: this.formData.checkCode
-        }
-      }).then(res => {
+      // })
+      tokenSDKClient.getDidList(this.formData.phone)
+      .then(res => {
       // console.log(res)
         this.formData.udidList = res.data.data.udidList
         alert('已得到did')
@@ -184,22 +178,14 @@ export default {
     getPvDataBox (event) {
       event.preventDefault()
       Promise.all([
-        tokenSDKClient.getKeyStore(this.formData.selectedUdid),
-        // tokenSDKClient.getKeyStore('2345trew'),
+        tokenSDKClient.getDidttm(this.formData.selectedUdid),
+        // tokenSDKClient.getDidttm('2345trew'),
         // tokenSDKClient.getPvData('2345trew')
         tokenSDKClient.getPvData(this.formData.selectedUdid)
-        // instance({
-        //   url: `/did/keystore/${this.formData.selectedUdid}`,
-        //   method: 'get'
-        // }),
-        // instance({
-        //   url: `/did/pvdata/${this.formData.selectedUdid}`,
-        //   method: 'get'
-        // })
       ]).then(([keyStoreCt, pvDataCt]) => {
         // 解密
         // 使用sm4、idpwd解密keyStoreCt
-        let keyStore = tokenSDKClient.decryptKeyStore(keyStoreCt.data.data, this.formData.idpwd) // 在该方法中已经写死了key。
+        let keyStore = tokenSDKClient.decryptDidttm(keyStoreCt.data.data, this.formData.idpwd) // 在该方法中已经写死了key。
         keyStore = JSON.parse(keyStore)
         // let keyStore = keyStoreCt.data.data
         // 保存keyStore
@@ -212,40 +198,15 @@ export default {
         // 使用sm2、私钥解密pvDataCt
         let pvData = tokenSDKClient.decryptPvData(pvDataCt.data.data, keyStore.privatekey)
         // let pvData = pvDataCt.data.data
-        // console.log('pvData', pvData)
+        console.log('pvData', pvData)
         // 保存pvData
         // this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {
         this.$store.dispatch('modifyPvData', {pvData: pvData}).then(() => {
           // console.log('pvData', pvData)
           this.$store.dispatch('modifyHasPvData', {hasPvData: true})
-          // // 渲染我的证书
-          // this.opCertify(pvData.submitCertifies, true)
-          // // 渲染我验证过的证书
-          // this.opCertify(pvData.validatedCertifies, false)
         }).catch((err) => {
           console.log(err)
         })
-      })
-    },
-    opCertify (certify, bool) {
-      instance({
-        url: `/claim/template/${certify.templateId}`,
-        method: 'get'
-      }).then(res => {
-        let data = res.data.data
-        let desc = data.desc
-        for (let key in data.data) {
-          let str = '\\$' + key + '\\$'
-          let reg = new RegExp(str, 'gm')
-          desc = desc.replace(reg, data.data[key])
-        }
-        if (bool) {
-          this.certifyData.title = data.title
-          this.certifyData.content = desc
-        } else {
-          this.checkSignCertifyData.title = data.title
-          this.checkSignCertifyData.content = desc
-        }
       })
     },
     simulateLogin (event) {

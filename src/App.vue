@@ -10,8 +10,11 @@
         <router-link to="/login" class="navItem">login</router-link>
         <router-link to="/cont" class="navItem">content</router-link>
         <router-link to="/pvdata" class="navItem">pvdata</router-link>
-        <!-- <router-link to="/staticp" class="navItem">staticPage</router-link> -->
         <router-link to="/testTokenSDKClient" class="navItem">testTokenSDKClient</router-link>
+        <router-link to="/uploadDidttm" class="navItem">上传私密文件</router-link>
+        <router-link to="/certifyList" class="navItem">申请证书</router-link>
+        <router-link to="/toSignCertify" class="navItem">待签发证书</router-link>
+        <router-link to="/certifyOfServer" class="navItem">服务端的证书</router-link>
       </div>
       <div class="userInfoBox" v-if="name || avatar">
         <span class="name">{{name}}</span>
@@ -97,4 +100,9 @@ export default {
       width: 60px
       border-radius: 100px
 
+.button
+  width: 100%
+  height: 40px
+  padding: 8px
+  border-radius: 8px
 </style>
