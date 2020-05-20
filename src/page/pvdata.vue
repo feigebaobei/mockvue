@@ -35,7 +35,7 @@
         </p>
       </section> -->
       <section class="certifyBox">
-        <section class="certifyItem" v-for="(item, index) in pvData.manageCertifies" :key="index">
+        <section class="certifyItem" v-for="(item, index) in pvData.manageCertifies" :key="index" @click="gotoCertifyDetail(item.templateId)">
           <div class="left">
             <h4 class="title">{{item.templateTitle}}</h4>
             <p>{{item.claim_sn}}</p>
@@ -53,7 +53,7 @@
       <!-- <h3 class="title">验证过的证书</h3> -->
       <h3 class="title">身份证书</h3>
       <section class="certifyBox">
-        <section class="certifyItem" v-for="(item, index) in pvData.identityCertifies" :key="index">
+        <section class="certifyItem" v-for="(item, index) in pvData.identityCertifies" :key="index" @click="gotoCertifyDetail(item.templateId)">
           <div class="left">
             <h4 class="title">{{item.templateTitle}}</h4>
             <p>{{item.claim_sn}}</p>
@@ -211,6 +211,14 @@ export default {
     //     // console.log('success')
     //   })
     // }
+    gotoCertifyDetail (templateId) {
+      this.$router.push({
+        path: '/certifyDetail',
+        query: {
+          templateId: templateId
+        }
+      })
+    }
   },
   created () {},
   mounted () {

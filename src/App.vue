@@ -105,4 +105,5 @@ export default {
   height: 40px
   padding: 8px
   border-radius: 8px
+  margin-bottom: 6px
 </style>

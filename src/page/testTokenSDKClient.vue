@@ -2,6 +2,7 @@
   <div class="testTokenSDKClient">
     <h2>测试 tokenSDKClient</h2>
     <button @click="fn">生成用于测试的pvdata</button>
+    <button @click="setPvData">设置pvdata</button>
     <!-- <basicvue></basicvue> -->
   </div>
 </template>
@@ -151,6 +152,10 @@ export default {
       console.log('mt', mt)
       mt = tokenSDKClient.decryptPvData(ctt, this.priStr)
       console.log('mt', mt)
+    },
+    setPvData () {
+      this.$store.dispatch('modifyPvData', {pvData: this.pvData})
+      this.$store.dispatch('modifyHasPvData', {hasPvData: true})
     }
   },
   created () {},
