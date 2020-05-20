@@ -17,8 +17,23 @@
     <!-- 签名列表 -->
     <section class="btBox">
       <button class="button" @click="gotoCertifySign">找人签发</button>
-      <button class="button" @click="gotoCertifyCheck">去查验</button>
+      <button class="button" @click="showModel">去查验</button>
       <button class="button" @click="cancel">取消</button>
+    </section>
+    <!-- model -->
+    <section class="selectModel" v-show="selectModel.show" @click.self="closeModel">
+      <section class="cont">
+        <h2>请选择需要哈希的值：</h2>
+        <form action="#">
+          <div class="item" v-for="(item, index) in selectModel.certifyDataItem" :key="index">
+            <label for="" class="label">{{item}}</label>
+            <input type="checkbox" :value="item" v-model="selectModel.hashDataItem">
+          </div>
+          <div class="item">
+            <button class="button" @click="gotoCertifyCheck">确定</button>
+          </div>
+        </form>
+      </section>
     </section>
   </div>
 </template>
@@ -46,6 +61,11 @@ export default {
           // }
         ],
         background: ''
+      },
+      selectModel: {
+        show: false,
+        certifyDataItem: [],
+        hashDataItem: []
       }
     }
   },
@@ -58,6 +78,7 @@ export default {
     init () {
       this.certify.claim_sn = '12345fd6d964575b3d42bf959' // 在测试是才写死
       this.getCertifyTemplat()
+      this.opModel()
     },
     getCertifyTemplat () {
       tokenSDKClient.getTemplate(this.templateId).then(res => {
@@ -118,13 +139,32 @@ export default {
         path: '/certifySign'
       })
     },
-    gotoCertifyCheck () {
-      this.$router.push({
-        path: '/certifyCheck',
-        query: {
-          templateId: this.templateId,
-          claim_sn: this.certify.claim_sn
-        }
+    gotoCertifyCheck (event) {
+      event.preventDefault()
+      let certify = this.$store.getters.getPvData.manageCertifies.filter((item) => item.claim_sn === this.certify.claim_sn)[0] || {}
+      let certifyData = certify.data
+      for (let element of this.selectModel.hashDataItem) {
+        // console.log(element)
+        certifyData[element] = new tokenSDKClient.sm3().sum(certifyData[element])
+      }
+      // console.log(certifyData)
+      // this.$router.push({
+      //   path: '/certifyCheck',
+      //   query: {
+      //     templateId: this.templateId,
+      //     claim_sn: this.certify.claim_sn
+      //   }
+      // })
+      tokenSDKClient.saveCertifyData(this.certify.claim_sn, this.templateId, certifyData).then(res => {
+        console.log('res', res)
+        this.$router.push({
+          path: '/certifyCheck',
+          query: {
+            uuid: res.data.data.uuid
+          }
+        })
+      }).catch(err => {
+        console.log('err', err)
       })
     },
     cancel () {
@@ -134,6 +174,19 @@ export default {
         console.log('err', err)
       })
     },
+    showModel () {
+      this.selectModel.show = true
+    },
+    closeModel () {
+      this.selectModel.show = false
+    },
+    opModel () {
+      let certify = this.$store.getters.getPvData.manageCertifies.filter((item) => item.claim_sn === this.certify.claim_sn)[0] || {}
+      // console.log('certify', certify)
+      for (let [key] of Object.entries(certify.data)) {
+        this.selectModel.certifyDataItem.push(key)
+      }
+    }
   },
   created () {},
   mounted () {
@@ -177,5 +230,27 @@ export default {
 
         .value
           flex-grow: 1
+
+    .selectModel
+      position: fixed
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      background: rgba(0, 0, 0, .2)
+      display: flex
+      justify-content: center
+      align-items: center
+
+      .cont
+        background: #fff
+        width: 600px
+        padding: 20px
+        .item
+          display: flex
+          margin-bottom: 6px
+
+          .label
+            width: 100px
 
 </style>
