@@ -1,7 +1,7 @@
 <template>
   <div class="certifyDetail">
     <!-- 证书视图 -->
-    <section class="certifyBox">
+    <section class="certifyBox" :style="{background: `url(${certify.background})`}">
       <h2 class="title">{{certify.title}}</h2>
       <p>{{certify.cont}}</p>
       <p class="center">{{certify.hashValue}}</p>
@@ -36,6 +36,7 @@ export default {
         title: '',
         cont: '',
         hashValue: '',
+        claim_sn: '',
         signList: [
           // {
           //   name: '',
@@ -43,7 +44,8 @@ export default {
           //   sign: '',
           //   expire: ''
           // }
-        ]
+        ],
+        background: ''
       }
     }
   },
@@ -58,13 +60,12 @@ export default {
     },
     getCertifyTemplat () {
       tokenSDKClient.getTemplate(this.templateId).then(res => {
-        let {title, desc, id} = res.data.data
+        let {title, desc, id, background} = res.data.data
         id = '12345fd6d964575b3d42bf959' // 在测试是才写死
         this.certify.title = title
-        let claim_sn = ''
         let certifyData = this.$store.getters.getPvData.manageCertifies.filter((item) => {
           if (item.claim_sn === id) {
-            claim_sn = item.claim_sn
+            this.certify.claim_sn = item.claim_sn
             return true
           } else {
             return false
@@ -76,13 +77,14 @@ export default {
         }
         this.certify.cont = desc
         // this.getCertifyFingerPrint(claim_sn, did, certifyData)
-        this.getCertifyFingerPrint(claim_sn)
+        this.getCertifyFingerPrint()
+        this.certify.background = background
       }).catch(err => {
         console.log('err', err)
       })
     },
-    getCertifyFingerPrint (claim_sn) {
-      tokenSDKClient.getCertifyFingerPrint(claim_sn).then(res => {
+    getCertifyFingerPrint () {
+      tokenSDKClient.getCertifyFingerPrint(this.certify.claim_sn).then(res => {
         this.certify.hashValue = res.data.data.hashCont || 'none hash value.'
         // let url = `${window.location.origin}/?claim_sn=${claim_sn}&did=${did}&${JSON.stringify(certifyData)}`
         // console.log(url)
@@ -122,6 +124,12 @@ export default {
       })
     },
     cancel () {
+      tokenSDKClient.cancelCertify(this.certify.claim_sn, this.$store.getters.getPvData.did, this.certify.hashValue, new Date().getTime(), this.$store.getters.getKeyStore.privatekey).then(() => {
+        // console.log('res', res)
+        alert('已经取消证书')
+      }).catch(err => {
+        console.log('err', err)
+      })
     },
   },
   created () {},
@@ -138,6 +146,9 @@ export default {
       display: flex
       justify-content: center
       flex-wrap: wrap
+      border: 2px solid #ddd
+      margin: 20px 0
+      padding: 16px
 
       .title
         text-align: center
@@ -146,7 +157,7 @@ export default {
         flex-basis: 100%
 
       .signBox
-        background: #ddd
+        background: rgba(221, 221, 221, .3)
         margin-bottom: 6px
         word-break: break-all
         padding: 6px

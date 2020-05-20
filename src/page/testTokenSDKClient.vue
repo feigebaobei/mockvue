@@ -2,6 +2,7 @@
   <div class="testTokenSDKClient">
     <h2>测试 tokenSDKClient</h2>
     <button @click="fn">生成用于测试的pvdata</button>
+    <button @click="setKeyStore">设置keyStore</button>
     <button @click="setPvData">设置pvdata</button>
     <!-- <basicvue></basicvue> -->
   </div>
@@ -18,6 +19,9 @@ export default {
   data () {
     return {
       priStr: '01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a',
+      keyStore: {
+        privatekey: "01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a"
+      },
       pvData: {
         "did": "did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608",
         "phone": "15652684614",
@@ -152,6 +156,11 @@ export default {
       console.log('mt', mt)
       mt = tokenSDKClient.decryptPvData(ctt, this.priStr)
       console.log('mt', mt)
+    },
+    setKeyStore () {
+      this.$store.dispatch('modifyKeyStore', {keyStore: this.keyStore}).catch(err => {
+        console.log('err', err)
+      })
     },
     setPvData () {
       this.$store.dispatch('modifyPvData', {pvData: this.pvData})
