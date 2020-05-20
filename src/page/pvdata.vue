@@ -35,7 +35,7 @@
         </p>
       </section> -->
       <section class="certifyBox">
-        <section class="certifyItem" v-for="(item, index) in pvData.manageCertifies" :key="index" @click="gotoCertifyDetail(item.templateId)">
+        <section class="certifyItem" v-for="(item, index) in pvData.manageCertifies" :key="index" @click="gotoCertifyDetail(item.templateId, item.claim_sn)">
           <div class="left">
             <h4 class="title">{{item.templateTitle}}</h4>
             <p>{{item.claim_sn}}</p>
@@ -53,7 +53,7 @@
       <!-- <h3 class="title">验证过的证书</h3> -->
       <h3 class="title">身份证书</h3>
       <section class="certifyBox">
-        <section class="certifyItem" v-for="(item, index) in pvData.identityCertifies" :key="index" @click="gotoCertifyDetail(item.templateId)">
+        <section class="certifyItem" v-for="(item, index) in pvData.identityCertifies" :key="index" @click="gotoCertifyDetail(item.templateId, item.claim_sn)">
           <div class="left">
             <h4 class="title">{{item.templateTitle}}</h4>
             <p>{{item.claim_sn}}</p>
@@ -148,53 +148,6 @@ export default {
         console.log('err', err)
       })
     },
-    // 渲染证书
-    // opCertify (certify, bool) {
-    //   console.log('certify', certify)
-    //   // bool 是否是自己的证书
-    //   // 请求证书模板
-    //   tokenSDKClient.getTemplate(certify.templateId)
-    //   .then(res => {
-    //     // let data = res.data.data
-    //     let data = this.pvData.property
-    //     let desc = res.data.data.desc
-    //     for (let key in data.data) {
-    //       let str = '\\$' + key + '\\$'
-    //       let reg = new RegExp(str, 'gm')
-    //       desc = desc.replace(reg, data.data[key])
-    //     }
-    //     if (bool) {
-    //       this.certifyData.title = data.title
-    //       // this.certifyData.content = desc
-    //       this.certifyData.content = this.opCont(desc, data)
-    //       // 核验二维码
-    //       this.opQR('checkQrMy', certify.hashCont)
-    //       // 验证二维码
-    //       this.opQR('signQrMy', certify.id)
-    //     } else {
-    //       this.checkSignCertifyData.title = data.title
-    //       this.checkSignCertifyData.content = desc
-    //       // 核验二维码
-    //       this.opQR('checkQrC', certify.hashCont)
-    //       // 验证二维码
-    //       this.opQR('signQrC', certify.id)
-    //     }
-    //   })
-    //   // 请求证书签名列表
-    //   // instance({
-    //   //   url: `/claim/fingerprint`,
-    //   //   method: 'get',
-    //   //   params: {
-    //   //     claimsn: ''
-    //   //   }
-    //   // })
-    //   tokenSDKClient.getCertifyFingerPrint(certify.id)
-    //   .then(res => {
-    //     this.certifyData.signList = res.data.data.signList
-    //   }).catch(err => {
-    //     console.log(err)
-    //   })
-    // },
     opCont (desc, data) {
       for (let [key, value] of Object.entries(data)) {
         let reg = new RegExp(`\\$${key}\\$`, 'gm')
@@ -202,20 +155,12 @@ export default {
       }
       return desc
     },
-    // 渲染二维码
-    // opQR (ref, data) {
-    //   QRCode.toCanvas(this.$refs[`${ref}`], JSON.stringify(data), error => {
-    //     if (error) {
-    //       console.log('error', error)
-    //     }
-    //     // console.log('success')
-    //   })
-    // }
-    gotoCertifyDetail (templateId) {
+    gotoCertifyDetail (templateId, claim_sn) {
       this.$router.push({
         path: '/certifyDetail',
         query: {
-          templateId: templateId
+          templateId: templateId,
+          claim_sn: claim_sn
         }
       })
     }

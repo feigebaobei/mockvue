@@ -36,7 +36,7 @@ export default {
         title: '',
         cont: '',
         hashValue: '',
-        claim_sn: '',
+        claim_sn: this.$route.query.claim_sn,
         signList: [
           // {
           //   name: '',
@@ -56,20 +56,20 @@ export default {
   },
   methods: {
     init () {
+      this.certify.claim_sn = '12345fd6d964575b3d42bf959' // 在测试是才写死
       this.getCertifyTemplat()
     },
     getCertifyTemplat () {
       tokenSDKClient.getTemplate(this.templateId).then(res => {
-        let {title, desc, id, background} = res.data.data
-        id = '12345fd6d964575b3d42bf959' // 在测试是才写死
+        let {title, desc, background} = res.data.data
         this.certify.title = title
         let certifyData = this.$store.getters.getPvData.manageCertifies.filter((item) => {
-          if (item.claim_sn === id) {
-            this.certify.claim_sn = item.claim_sn
-            return true
-          } else {
-            return false
-          }
+          // if (item.claim_sn === this.certify.claim_sn) {
+          //   return true
+          // } else {
+          //   return false
+          // }
+          return item.claim_sn === this.certify.claim_sn
         })[0].data || {}
         for (let [key, value] of Object.entries(certifyData)) {
           let reg = new RegExp(`\\$${key}\\$`, 'gm')
@@ -98,9 +98,9 @@ export default {
         })
         this.certify.signList = res.data.data.signList.map((item) => {
           let date = new Date(Number(item.endtime))
-          console.log(date)
+          // console.log(date)
           let [y, m, d, h, mm, s] = [date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()]
-          console.log(y,m,d)
+          // console.log(y,m,d)
           return {
             did: item.byDid,
             expire: `${y}年${m+1}月${d}日 ${h}:${mm}:${s}`,
@@ -120,12 +120,15 @@ export default {
     },
     gotoCertifyCheck () {
       this.$router.push({
-        path: '/certifyCheck'
+        path: '/certifyCheck',
+        query: {
+          templateId: this.templateId,
+          claim_sn: this.certify.claim_sn
+        }
       })
     },
     cancel () {
       tokenSDKClient.cancelCertify(this.certify.claim_sn, this.$store.getters.getPvData.did, this.certify.hashValue, new Date().getTime(), this.$store.getters.getKeyStore.privatekey).then(() => {
-        // console.log('res', res)
         alert('已经取消证书')
       }).catch(err => {
         console.log('err', err)
