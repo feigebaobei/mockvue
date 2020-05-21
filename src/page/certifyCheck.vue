@@ -5,14 +5,25 @@
       <h2 class="title">{{certify.title}}</h2>
       <p>{{certify.cont}}</p>
       <p class="center">{{certify.hashValue}}</p>
+      <div class="barBox">
+        <img src="" alt="" id="bar">
+      </div>
     </section>
     <!-- 链上数据 -->
     <section class="chainData">
       <h2>链上数据</h2>
-      <p v-for="(value, k, index) in chainData" :key="index">
+      <!-- 就是签名列表 -->
+      <!-- <p v-for="(value, k, index) in chainData" :key="index">
         <span class="k">{{k}}</span>
         <span class="value">{{value}}</span>
-      </p>
+      </p> -->
+      <section class="signBox" v-for="(item, index) in certify.signList" :key="index">
+        <h4 v-if="index === 0">申明者: {{item.name}} &nbsp;&nbsp;&nbsp;&nbsp; 状态 {{item.status}}</h4>
+        <h4 v-else>签发者: {{item.name}} &nbsp;&nbsp;&nbsp;&nbsp; 状态 {{item.status}}</h4>
+        <p><span class="key">DID: </span><span class="value">{{item.did}}</span></p>
+        <p><span class="key">签名数据: </span><span class="value">{{item.sign}}</span></p>
+        <p><span class="key">过期时间: </span><span class="value">{{item.expire}}</span></p>
+      </section>
     </section>
     <!-- 查验说明 -->
     <section class="checkDescribe">
@@ -29,7 +40,6 @@
       <p>本地计算的哈希值：</p>
       <p>{{calcHashCont}}</p>
     </section>
-
     <!-- 计算比对 -->
     <button class="button" @click="cale">计算比对</button>
   </div>
@@ -38,14 +48,17 @@
 <script>
 // import { basicvue } from '@/components/oasiscare'
 import tokenSDKClient from 'token-sdk-client'
+import JsBarcode from 'jsbarcode'
 export default {
   props: {},
   data () {
     return {
       templateId: this.$route.query.templateId,
+      temporaryID: this.$route.query.temporaryID,
       certify:{
         title: '',
         cont: '',
+        data: {},
         hashValue: '',
         claim_sn: this.$route.query.claim_sn,
         signList: [
@@ -69,36 +82,59 @@ export default {
   },
   methods: {
     init () {
-      this.certify.claim_sn = '12345fd6d964575b3d42bf959' // 在测试是才写死
-      this.getCertifyTemplat()
-      this.getCertifyFingerPrint()
+      if (this.certify.claim_sn && this.templateId) {
+        this.getCertifyTemplat()
+        this.getCertifyFingerPrint()
+      } else {
+        this.getTemporaryCertifyData()
+      }
     },
+    // 请求临时数据
+    getTemporaryCertifyData () {
+      tokenSDKClient.getTemporaryCertifyData(this.temporaryID).then(res => {
+        console.log('res', res)
+      }).catch(err => {
+        console.log('err', err)
+      })
+    },
+    // 请求模板
     getCertifyTemplat () {
       tokenSDKClient.getTemplate(this.templateId).then(res => {
         let {title, desc, background} = res.data.data
         this.certify.title = title
+        this.certify.cont = desc
+        // 从pvdata中取出证书数据嵌入到模板中。
         let certifyData = this.$store.getters.getPvData.manageCertifies.filter((item) => {
           return item.claim_sn === this.certify.claim_sn
         })[0].data || {}
-        for (let [key, value] of Object.entries(certifyData)) {
+        this.certify.data = JSON.parse(JSON.stringify(certifyData)) // 这样避免浅复制
+        for (let [key, value] of Object.entries(this.certify.data)) {
           let reg = new RegExp(`\\$${key}\\$`, 'gm')
-          desc = desc.replace(reg, value)
+          // desc = desc.replace(reg, value)
+          this.certify.cont = this.certify.cont.replace(reg, value)
         }
-        this.certify.cont = desc
-        // this.getCertifyFingerPrint()
         this.certify.background = background
       }).catch(err => {
         console.log('err', err)
       })
     },
+    // 请求证书指纹
     getCertifyFingerPrint () {
       tokenSDKClient.getCertifyFingerPrint(this.certify.claim_sn).then(res => {
-      //   // let {} = res.data.data
         this.certify.hashValue = res.data.data.hashCont || 'none hash value.'
-        for (let [key, value] of Object.entries(res.data.data)) {
-          // this.chainData[key] = JSON.stringify(value)
-          this.chainData[key] = value
-        }
+        // 渲染barcode
+        JsBarcode('#bar', this.certify.hashValue)
+        this.certify.signList = res.data.data.signList.map((item) => {
+          let date = new Date(Number(item.endtime))
+          let [y, m, d, h, mm, s] = [date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()]
+          return {
+            did: item.byDid,
+            expire: `${y}年${m+1}月${d}日 ${h}:${mm}:${s}`,
+            sign: JSON.stringify(item.sign),
+            name: item.name,
+            status: item.status
+          }
+        })
       }).catch((err) => {
         console.log('err', err)
       })
@@ -150,24 +186,12 @@ export default {
         text-align: center
         flex-basis: 100%
 
-      .signBox
-        background: rgba(221, 221, 221, .3)
-        margin-bottom: 6px
-        word-break: break-all
-        padding: 6px
+      .barBox
+        flex-basis: 100%
 
-        h4
-        p
-          margin: 0
-          display: flex
-
-        .key
-          flex-basis: 80px
-          flex-grow: 0
-          flex-shrink: 0
-
-        .value
-          flex-grow: 1
+        #bar
+          display: block
+          margin: 0 auto
 
     .chainData
       display: flex
@@ -188,5 +212,24 @@ export default {
           flex-grow: 0
           flex-shrink: 0
           flex-basis: 80%
+
+      .signBox
+        background: rgba(221, 221, 221, .3)
+        margin-bottom: 6px
+        word-break: break-all
+        padding: 6px
+
+        h4
+        p
+          margin: 0
+          display: flex
+
+          .key
+            flex-basis: 80px
+            flex-grow: 0
+            flex-shrink: 0
+
+          .value
+            flex-grow: 1
 
 </style>

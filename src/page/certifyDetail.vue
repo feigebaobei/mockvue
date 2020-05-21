@@ -5,7 +5,11 @@
       <h2 class="title">{{certify.title}}</h2>
       <p>{{certify.cont}}</p>
       <p class="center">{{certify.hashValue}}</p>
-      <canvas id="canvas" ref="qr"></canvas>
+      <!-- <canvas id="bar" ref="bar" @click="showModel"></canvas> -->
+      <div class="barBox">
+        <img src="" alt="" id="bar">
+      </div>
+      <canvas id="canvas" ref="qr" @click="showModel"></canvas>
       <section class="signBox" v-for="(item, index) in certify.signList" :key="index">
         <h4 v-if="index === 0">申明者: {{item.name}} &nbsp;&nbsp;&nbsp;&nbsp; 状态 {{item.status}}</h4>
         <h4 v-else>签发者: {{item.name}} &nbsp;&nbsp;&nbsp;&nbsp; 状态 {{item.status}}</h4>
@@ -17,7 +21,7 @@
     <!-- 签名列表 -->
     <section class="btBox">
       <button class="button" @click="gotoCertifySign">找人签发</button>
-      <button class="button" @click="showModel">去查验</button>
+      <!-- <button class="button" @click="showModel">去查验</button> -->
       <button class="button" @click="cancel">取消</button>
     </section>
     <!-- model -->
@@ -50,7 +54,7 @@
 // import { basicvue } from '@/components/oasiscare'
 import QRCode from 'qrcode'
 import tokenSDKClient from 'token-sdk-client'
-// import utils from '@/lib/utils'
+import JsBarcode from 'jsbarcode'
 export default {
   props: {},
   data () {
@@ -118,9 +122,11 @@ export default {
     getCertifyFingerPrint () {
       tokenSDKClient.getCertifyFingerPrint(this.certify.claim_sn).then(res => {
         this.certify.hashValue = res.data.data.hashCont || 'none hash value.'
-        // let url = `${window.location.origin}/?claim_sn=${claim_sn}&did=${did}&${JSON.stringify(certifyData)}`
+        let url = `${window.location.origin}?claim_sn=${this.certify.claim_sn}&templateId=${this.templateId}`
         // console.log(url)
-        let url = this.certify.hashValue
+        // let url = this.certify.hashValue
+        // 渲染barcode
+        JsBarcode('#bar', this.certify.hashValue)
         // 渲染qr
         QRCode.toCanvas(this.$refs.qr, url, error => {
           if (error) {
@@ -162,13 +168,15 @@ export default {
       expire.setSeconds(0)
       expire.setMilliseconds(0)
       expire = expire.getTime()
-      tokenSDKClient.saveCertifyData(this.certify.claim_sn, this.templateId, this.certify.data, expire, this.selectModel.purpose).then(res => {
+      tokenSDKClient.setTemporaryCertifyData(this.certify.claim_sn, this.templateId, this.certify.data, expire, this.selectModel.purpose).then(res => {
         console.log('res', res)
         this.$router.push({
           path: '/certifyCheck',
           // path: '/',
           query: {
-            temporaryID: res.data.data.temporaryID
+            // temporaryID: res.data.data.temporaryID
+            claim_sn: this.certify.claim_sn,
+            templateId: this.templateId
           }
         })
       }).catch(err => {
@@ -219,6 +227,13 @@ export default {
         text-align: center
         flex-basis: 100%
 
+      .barBox
+        flex-basis: 100%
+
+        #bar
+          display: block
+          margin: 0 auto
+
       .signBox
         background: rgba(221, 221, 221, .3)
         margin-bottom: 6px
@@ -230,13 +245,13 @@ export default {
           margin: 0
           display: flex
 
-        .key
-          flex-basis: 80px
-          flex-grow: 0
-          flex-shrink: 0
+          .key
+            flex-basis: 80px
+            flex-grow: 0
+            flex-shrink: 0
 
-        .value
-          flex-grow: 1
+          .value
+            flex-grow: 1
 
     .selectModel
       position: fixed

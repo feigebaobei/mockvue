@@ -11,6 +11,7 @@
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "js-base64": "^2.5.2",
+    "jsbarcode": "^3.11.0",
     "qrcode": "^1.4.4",
     "token-sdk-client": "0.0.9",
     "vue": "^2.6.11",
