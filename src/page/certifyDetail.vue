@@ -30,6 +30,14 @@
             <input type="checkbox" :value="item" v-model="selectModel.hashDataItem">
           </div>
           <div class="item">
+            <label for="" class="label">有效期至</label>
+            <input type="date" v-model="selectModel.expireStr">
+          </div>
+          <div class="item">
+            <label for="" class="label">用途</label>
+            <input type="text" v-model="selectModel.purpose">
+          </div>
+          <div class="item">
             <button class="button" @click="gotoCertifyCheck">确定</button>
           </div>
         </form>
@@ -42,6 +50,7 @@
 // import { basicvue } from '@/components/oasiscare'
 import QRCode from 'qrcode'
 import tokenSDKClient from 'token-sdk-client'
+// import utils from '@/lib/utils'
 export default {
   props: {},
   data () {
@@ -50,6 +59,7 @@ export default {
       certify:{
         title: '',
         cont: '',
+        data: {},
         hashValue: '',
         claim_sn: this.$route.query.claim_sn,
         signList: [
@@ -65,18 +75,24 @@ export default {
       selectModel: {
         show: false,
         certifyDataItem: [],
-        hashDataItem: []
+        hashDataItem: [],
+        expireStr: '',
+        // expire: '',
+        purpose: ''
       }
     }
   },
   computed: {
+    pvData () {
+      return this.$store.getters.getPvData
+    }
   },
   components: {
     // basicvue
   },
   methods: {
     init () {
-      this.certify.claim_sn = '12345fd6d964575b3d42bf959' // 在测试是才写死
+      // this.certify.claim_sn = '12345fd6d964575b3d42bf959' // 在测试是才写死
       this.getCertifyTemplat()
       this.opModel()
     },
@@ -84,20 +100,15 @@ export default {
       tokenSDKClient.getTemplate(this.templateId).then(res => {
         let {title, desc, background} = res.data.data
         this.certify.title = title
-        let certifyData = this.$store.getters.getPvData.manageCertifies.filter((item) => {
-          // if (item.claim_sn === this.certify.claim_sn) {
-          //   return true
-          // } else {
-          //   return false
-          // }
-          return item.claim_sn === this.certify.claim_sn
-        })[0].data || {}
-        for (let [key, value] of Object.entries(certifyData)) {
-          let reg = new RegExp(`\\$${key}\\$`, 'gm')
-          desc = desc.replace(reg, value)
-        }
         this.certify.cont = desc
-        // this.getCertifyFingerPrint(claim_sn, did, certifyData)
+        let certifyData = this.$store.getters.getPvData.manageCertifies.filter((item) => item.claim_sn === this.certify.claim_sn)[0].data || {}
+        // console.log('certifyData', certifyData, certifyData.gender, certifyData.identify)
+        // this.certify.data = certifyData // 这样会浅复制
+        this.certify.data = JSON.parse(JSON.stringify(certifyData)) // 这样避免浅复制
+        for (let [key, value] of Object.entries(this.certify.data)) {
+          let reg = new RegExp(`\\$${key}\\$`, 'gm')
+          this.certify.cont = this.certify.cont.replace(reg, value)
+        }
         this.getCertifyFingerPrint()
         this.certify.background = background
       }).catch(err => {
@@ -115,13 +126,10 @@ export default {
           if (error) {
             console.log('error', error)
           }
-          // console.log('success')
         })
         this.certify.signList = res.data.data.signList.map((item) => {
           let date = new Date(Number(item.endtime))
-          // console.log(date)
           let [y, m, d, h, mm, s] = [date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()]
-          // console.log(y,m,d)
           return {
             did: item.byDid,
             expire: `${y}年${m+1}月${d}日 ${h}:${mm}:${s}`,
@@ -141,26 +149,26 @@ export default {
     },
     gotoCertifyCheck (event) {
       event.preventDefault()
-      let certify = this.$store.getters.getPvData.manageCertifies.filter((item) => item.claim_sn === this.certify.claim_sn)[0] || {}
-      let certifyData = certify.data
       for (let element of this.selectModel.hashDataItem) {
-        // console.log(element)
-        certifyData[element] = new tokenSDKClient.sm3().sum(certifyData[element])
+        this.certify.data[element] = new tokenSDKClient.sm3().sum(this.certify.data[element])
       }
-      // console.log(certifyData)
-      // this.$router.push({
-      //   path: '/certifyCheck',
-      //   query: {
-      //     templateId: this.templateId,
-      //     claim_sn: this.certify.claim_sn
-      //   }
-      // })
-      tokenSDKClient.saveCertifyData(this.certify.claim_sn, this.templateId, certifyData).then(res => {
+      let expire = new Date()
+      let [y, m, d] = this.selectModel.expireStr.split(/[，,/-\s\\]/)
+      expire.setFullYear(y)
+      expire.setMonth(m - 1)
+      expire.setDate(d)
+      expire.setHours(0)
+      expire.setMinutes(0)
+      expire.setSeconds(0)
+      expire.setMilliseconds(0)
+      expire = expire.getTime()
+      tokenSDKClient.saveCertifyData(this.certify.claim_sn, this.templateId, this.certify.data, expire, this.selectModel.purpose).then(res => {
         console.log('res', res)
         this.$router.push({
           path: '/certifyCheck',
+          // path: '/',
           query: {
-            uuid: res.data.data.uuid
+            temporaryID: res.data.data.temporaryID
           }
         })
       }).catch(err => {
@@ -182,7 +190,6 @@ export default {
     },
     opModel () {
       let certify = this.$store.getters.getPvData.manageCertifies.filter((item) => item.claim_sn === this.certify.claim_sn)[0] || {}
-      // console.log('certify', certify)
       for (let [key] of Object.entries(certify.data)) {
         this.selectModel.certifyDataItem.push(key)
       }

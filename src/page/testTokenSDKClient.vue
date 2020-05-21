@@ -50,7 +50,7 @@ export default {
         },
         "manageCertifies": [
           {
-            "claim_sn": "a68c5fd6d964575b3d42bf959",
+            "claim_sn": "8102b22a5e81e840176d9f381",
             "templateId": "001",
             "templateTitle": "荣誉证书",
             "data": {
@@ -62,7 +62,7 @@ export default {
             "type": "owner"
           },
           {
-            "claim_sn": "a68c5fd6d964575b3d42bf959",
+            "claim_sn": "102b22a5e81e840176d9f381e",
             "templateId": "001",
             "templateTitle": "荣誉证书",
             "data": {
@@ -74,7 +74,7 @@ export default {
             "type": "checked"
           },
           {
-            "claim_sn": "12345fd6d964575b3d42bf959",
+            "claim_sn": "02b22a5e81e840176d9f381ec",
             "templateId": "002",
             "templateTitle": "毕业证书",
             "data": {
@@ -97,7 +97,7 @@ export default {
         ],
         "identityCertifies": [
           {
-            "claim_sn": "a68c5fd6d964575b3d42bf959",
+            "claim_sn": "2b22a5e81e840176d9f381ec6",
             "templateId": "003",
             "templateTitle": "居住证书",
             "data": {
@@ -112,7 +112,7 @@ export default {
             }
           },
           {
-            "claim_sn": "12345fd6d964575b3d42bf959",
+            "claim_sn": "b22a5e81e840176d9f381ec6f",
             "templateId": "004",
             "templateTitle": "身份证书",
             "data": {
