@@ -14,6 +14,7 @@ import uploadDidttm from '../page/uploadDidttm.vue'
 import certifyDetail from '../page/certifyDetail.vue'
 import certifyCheck from '../page/certifyCheck.vue'
 import certifySign from '../page/certifySign.vue'
+import certifyPoster from '../page/certifyPoster.vue'
 
 // const routerPush = VueRouter.prototype.push
 // VueRouter.prototype.push = function push(location) {
@@ -98,6 +99,11 @@ const routes = [
     path: '/certifySign',
     name: 'certifySign',
     component: certifySign
+  },
+  {
+    path: '/certifyPoster',
+    name: 'certifyPoster',
+    component: certifyPoster
   }
 ]
 const router = new VueRouter({

@@ -58,6 +58,7 @@ export default {
       certify:{
         title: '',
         cont: '',
+        desc: '',
         data: {},
         hashValue: '',
         claim_sn: this.$route.query.claim_sn,
@@ -83,7 +84,7 @@ export default {
   methods: {
     init () {
       if (this.certify.claim_sn && this.templateId) {
-        this.getCertifyTemplat()
+        this.getCertifyTemplate()
         this.getCertifyFingerPrint()
       } else {
         this.getTemporaryCertifyData()
@@ -92,26 +93,59 @@ export default {
     // 请求临时数据
     getTemporaryCertifyData () {
       tokenSDKClient.getTemporaryCertifyData(this.temporaryID).then(res => {
-        console.log('res', res)
+        this.templateId = res.data.data.templateId
+        this.certify.claim_sn = res.data.data.claim_sn
+        this.certify.data = res.data.data.certifyData
+          // for (let [key, {value, hasHash}] of Object.entries(this.certify.data)) {
+          //   if (hasHash) {
+          //     value = tokenSDKClient.bytesToStrHex(value)
+          //   }
+          //   this.certify.data[key] = {
+          //     value: value,
+          //     hasHash: hasHash
+          //   }
+          //   let reg = new RegExp(`\\$${key}\\$`, 'gm')
+          //   this.certify.cont = this.certify.cont.replace(reg, value)
+          // }
+        this.getCertifyTemplate(false)
+        this.getCertifyFingerPrint()
       }).catch(err => {
         console.log('err', err)
       })
     },
     // 请求模板
-    getCertifyTemplat () {
+    getCertifyTemplate (usePvData = true) {
+      // 使用claim_sn+templateId是使用pvdata
+      // 否则使用temporaryID里的数据
       tokenSDKClient.getTemplate(this.templateId).then(res => {
         let {title, desc, background} = res.data.data
         this.certify.title = title
+        this.certify.desc = desc
         this.certify.cont = desc
-        // 从pvdata中取出证书数据嵌入到模板中。
-        let certifyData = this.$store.getters.getPvData.manageCertifies.filter((item) => {
-          return item.claim_sn === this.certify.claim_sn
-        })[0].data || {}
-        this.certify.data = JSON.parse(JSON.stringify(certifyData)) // 这样避免浅复制
-        for (let [key, value] of Object.entries(this.certify.data)) {
-          let reg = new RegExp(`\\$${key}\\$`, 'gm')
-          // desc = desc.replace(reg, value)
-          this.certify.cont = this.certify.cont.replace(reg, value)
+        // 是否使用pvdata里的数据渲染
+        if (usePvData) {
+          // 从pvdata中取出证书数据嵌入到模板中。
+          let certifyData = JSON.parse(JSON.stringify(this.$store.getters.getPvData.manageCertifies.filter((item) => item.claim_sn === this.certify.claim_sn)[0].data || {})) // 这样避免浅复制
+          for (let [key, value] of Object.entries(certifyData)) {
+            this.certify.data[key] = {
+              value: value,
+              hasHash: false
+            }
+            let reg = new RegExp(`\\$${key}\\$`, 'gm')
+            this.certify.cont = this.certify.cont.replace(reg, value)
+          }
+        } else {
+          for (let [key, {value, hasHash}] of Object.entries(this.certify.data)) {
+            if (hasHash) {
+              value = tokenSDKClient.bytesToStrHex(value)
+            }
+            this.certify.data[key] = {
+              value: value,
+              hasHash: hasHash
+            }
+            let reg = new RegExp(`\\$${key}\\$`, 'gm')
+            this.certify.cont = this.certify.cont.replace(reg, value)
+          }
         }
         this.certify.background = background
       }).catch(err => {
@@ -140,26 +174,19 @@ export default {
       })
     },
     cale () {
-      var sm3 = new tokenSDKClient.sm3()
-      var digest = sm3.sum(this.certify.cont)
-      // console.log(digest)
-      // [233, 66, 140, 98, 38, 46, 230, 146, 17, 110, 103, 24, 130, 69, 210, 226, 102, 10, 185, 65, 73, 23, 68, 210, 78, 245, 19, 44, 117, 13, 65, 194]
-      let str = this.bytesToStrHex(digest)
-      // console.log(str)
-      // e9428c62262ee692116e67188245d2e2660ab941491744d24ef5132c750d41c2
+      let resStr = ''
+      for (let [key, {value, hasHash}] of Object.entries(this.certify.data)) {
+        let reg = new RegExp(`\\$${key}\\$`, 'gm')
+        if (!hasHash) {
+          value = new tokenSDKClient.sm3().sum(value)
+        }
+        value = tokenSDKClient.bytesToStrHex(value)
+        resStr = this.certify.desc.replace(reg, value)
+      }
+      let digest = new tokenSDKClient.sm3().sum(resStr)
+      let str = tokenSDKClient.bytesToStrHex(digest)
       this.calcHashCont = str
       alert(`${str === this.certify.hashValue ? '比对结果相同' : '比对结果不同'}`)
-    },
-    bytesToStrHex(arr) {
-      var str = ''
-      for (var i = 0; i < arr.length; i++) {
-        var temp = parseInt(arr[i], 10).toString(16)
-        if (temp.length < 2) {
-          temp = '0' + temp
-        }
-        str += temp
-      }
-      return str
     }
   },
   created () {},

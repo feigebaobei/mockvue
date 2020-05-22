@@ -5,11 +5,10 @@
       <h2 class="title">{{certify.title}}</h2>
       <p>{{certify.cont}}</p>
       <p class="center">{{certify.hashValue}}</p>
-      <!-- <canvas id="bar" ref="bar" @click="showModel"></canvas> -->
       <div class="barBox">
         <img src="" alt="" id="bar">
       </div>
-      <canvas id="canvas" ref="qr" @click="showModel"></canvas>
+      <canvas id="canvas" ref="qr" @click="gotoCertifyCheck"></canvas>
       <section class="signBox" v-for="(item, index) in certify.signList" :key="index">
         <h4 v-if="index === 0">申明者: {{item.name}} &nbsp;&nbsp;&nbsp;&nbsp; 状态 {{item.status}}</h4>
         <h4 v-else>签发者: {{item.name}} &nbsp;&nbsp;&nbsp;&nbsp; 状态 {{item.status}}</h4>
@@ -22,6 +21,7 @@
     <section class="btBox">
       <button class="button" @click="gotoCertifySign">找人签发</button>
       <!-- <button class="button" @click="showModel">去查验</button> -->
+      <button class="button" @click="showModel">输出海报</button>
       <button class="button" @click="cancel">取消</button>
     </section>
     <!-- model -->
@@ -42,7 +42,7 @@
             <input type="text" v-model="selectModel.purpose">
           </div>
           <div class="item">
-            <button class="button" @click="gotoCertifyCheck">确定</button>
+            <button class="button" @click="gotoCertifyPoster">确定</button>
           </div>
         </form>
       </section>
@@ -55,6 +55,7 @@
 import QRCode from 'qrcode'
 import tokenSDKClient from 'token-sdk-client'
 import JsBarcode from 'jsbarcode'
+import XEClipboard from 'xe-clipboard'
 export default {
   props: {},
   data () {
@@ -87,16 +88,15 @@ export default {
     }
   },
   computed: {
-    pvData () {
-      return this.$store.getters.getPvData
-    }
   },
   components: {
     // basicvue
   },
   methods: {
     init () {
+      // console.log(XEClipboard)
       // this.certify.claim_sn = '12345fd6d964575b3d42bf959' // 在测试是才写死
+      // console.log(tokenSDKClient)
       this.getCertifyTemplat()
       this.opModel()
     },
@@ -149,38 +149,38 @@ export default {
       })
     },
     gotoCertifySign () {
-      this.$router.push({
-        path: '/certifySign'
-      })
-    },
-    gotoCertifyCheck (event) {
-      event.preventDefault()
-      for (let element of this.selectModel.hashDataItem) {
-        this.certify.data[element] = new tokenSDKClient.sm3().sum(this.certify.data[element])
+      let certifyData = {}
+      for (let [key, value] of Object.entries(this.certify.data)) {
+        certifyData[key] = {
+          value: value,
+          hasHash: false
+        }
       }
-      let expire = new Date()
-      let [y, m, d] = this.selectModel.expireStr.split(/[，,/-\s\\]/)
-      expire.setFullYear(y)
-      expire.setMonth(m - 1)
-      expire.setDate(d)
-      expire.setHours(0)
-      expire.setMinutes(0)
-      expire.setSeconds(0)
-      expire.setMilliseconds(0)
-      expire = expire.getTime()
-      tokenSDKClient.setTemporaryCertifyData(this.certify.claim_sn, this.templateId, this.certify.data, expire, this.selectModel.purpose).then(res => {
-        console.log('res', res)
+      tokenSDKClient.certifySignUrl(this.certify.claim_sn, this.templateId, certifyData).then(res => {
+        // console.log('res', res)
+        let url = `${window.location.origin}`
+        this.$router.mode === 'hash' ? url += '/#' : ''
+        url += `/certifySign/?certifySignUuid=${res.data.data}`
+        XEClipboard.copy(url)
+        alert('已经复制签发页面的url。该url有效期为10min。')
+        // 为了开发，所以进入签发页面。
         this.$router.push({
-          path: '/certifyCheck',
-          // path: '/',
+          path: '/certifySign',
           query: {
-            // temporaryID: res.data.data.temporaryID
-            claim_sn: this.certify.claim_sn,
-            templateId: this.templateId
+            certifySignUuid: `${res.data.data}`
           }
         })
       }).catch(err => {
         console.log('err', err)
+      })
+    },
+    gotoCertifyCheck () {
+      this.$router.push({
+        path: '/certifyCheck',
+        query: {
+          claim_sn: this.certify.claim_sn,
+          templateId: this.templateId
+        }
       })
     },
     cancel () {
@@ -201,6 +201,46 @@ export default {
       for (let [key] of Object.entries(certify.data)) {
         this.selectModel.certifyDataItem.push(key)
       }
+    },
+    gotoCertifyPoster (event) {
+      event.preventDefault()
+      // let certifyData = JSON.parse(JSON.stringify(this.certify.data))
+      let certifyData = {}
+      for (let [key, value] of Object.entries(this.certify.data)) {
+        certifyData[key] = {
+          value: value,
+          hasHash: false
+        }
+      }
+      for (let element of this.selectModel.hashDataItem) {
+        // this.certify.data[element] = new tokenSDKClient.sm3().sum(this.certify.data[element])
+        certifyData[element] = {
+          value: new tokenSDKClient.sm3().sum(this.certify.data[element]),
+          hasHash: true
+        }
+      }
+      let expire = new Date()
+      let [y, m, d] = this.selectModel.expireStr.split(/[，,/-\s\\]/)
+      expire.setFullYear(y)
+      expire.setMonth(m - 1)
+      expire.setDate(d)
+      expire.setHours(0)
+      expire.setMinutes(0)
+      expire.setSeconds(0)
+      expire.setMilliseconds(0)
+      expire = expire.getTime()
+      // console.log('certifyData', certifyData)
+      tokenSDKClient.setTemporaryCertifyData(this.certify.claim_sn, this.templateId, certifyData, expire, this.selectModel.purpose).then(res => {
+        // console.log('res', res)
+        this.$router.push({
+          path: '/certifyPoster',
+          query: {
+          temporaryID: res.data.data.temporaryID
+          }
+        })
+      }).catch(err => {
+        console.log('err', err)
+      })
     }
   },
   created () {},

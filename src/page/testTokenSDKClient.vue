@@ -2,6 +2,7 @@
   <div class="testTokenSDKClient">
     <h2>测试 tokenSDKClient</h2>
     <button @click="fn">生成用于测试的pvdata</button>
+    <button @click="opDidttm">生成用于测试的didttm</button>
     <button @click="setKeyStore">设置keyStore</button>
     <button @click="setPvData">设置pvdata</button>
     <!-- <basicvue></basicvue> -->
@@ -128,6 +129,13 @@ export default {
           }
         ],
         "contacts": []
+      },
+      didttm: {
+        name: '微信',
+        phone: '18512345678',
+        pdid: 'did:ttm:a012349681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608',
+        node: 'https://www.xxxxx.com',
+        prikey: '01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a'
       }
     }
   },
@@ -165,6 +173,14 @@ export default {
     setPvData () {
       this.$store.dispatch('modifyPvData', {pvData: this.pvData})
       this.$store.dispatch('modifyHasPvData', {hasPvData: true})
+    },
+    opDidttm () {
+      // 客户端加密，服务端解密
+      let ct = tokenSDKClient.encryptDidttm(JSON.stringify(this.didttm), '123456')
+      console.log('ct', ct)
+      let mt = tokenSDKClient.decryptDidttm(ct, '123456')
+      console.log('mt', mt)
+      // console.log('ct', JSON.stringify(this.didttm))
     }
   },
   created () {},
