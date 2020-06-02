@@ -11,7 +11,8 @@
         <router-link to="/cont" class="navItem">content</router-link>
         <router-link to="/pvdata" class="navItem">pvdata</router-link>
         <router-link to="/testTokenSDKClient" class="navItem">testTokenSDKClient</router-link>
-        <router-link to="/uploadDidttm" class="navItem">上传私密文件</router-link>
+        <router-link to="/server/uploadDidttm" class="navItem">上传私密文件</router-link>
+        <router-link to="/server/pvdata" class="navItem">服务端pvdata</router-link>
         <router-link to="/certifyList" class="navItem">申请证书</router-link>
         <router-link to="/toSignCertify" class="navItem">待签发证书</router-link>
         <router-link to="/certifyOfServer" class="navItem">服务端的证书</router-link>

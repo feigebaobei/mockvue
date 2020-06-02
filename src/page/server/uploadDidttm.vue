@@ -35,6 +35,7 @@
 <script>
 // import { basicvue } from '@/components/oasiscare'
 import instance from '@/lib/axiosInstance'
+// import tokenSDKClient from 'token-sdk-client'
 // import qs from 'qs'
 export default {
   props: {},
@@ -102,7 +103,7 @@ export default {
         }
       }).then(res => {
         // console.log('res', res)
-        this.didttmmt = JSON.parse(res.data.data)
+        this.didttmmt = JSON.parse(res.data.data.mt)
         this.decrypt.finish = true
         this.decrypt.result = true
       }).catch(err => {
@@ -112,11 +113,14 @@ export default {
     },
     // reqDidttmMt () {}
     updataPvData () {
+      let did = this.didttm.name.match(/^\w*(?=\.ttm$)/)[0]
+      did = `did:ttm:${did}`
       instance({
         url: '/private/pvdata',
         method: 'post',
         data: {
-          did: this.didttm.name.match(/^\w*(?=\.ttm$)/)[0]
+          method: 'update',
+          did: did
         }
       })
     }

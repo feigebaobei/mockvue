@@ -10,11 +10,16 @@ import certifyList from '../page/certifyList.vue'
 import applyCertify from '../page/applyCertify.vue'
 import certifyOfServer from '../page/certifyOfServer.vue'
 import toSignCertify from '../page/toSignCertify.vue'
-import uploadDidttm from '../page/uploadDidttm.vue'
 import certifyDetail from '../page/certifyDetail.vue'
 import certifyCheck from '../page/certifyCheck.vue'
 import certifySign from '../page/certifySign.vue'
 import certifyPoster from '../page/certifyPoster.vue'
+
+import serverIndex from '../page/server/index.vue'
+import serverUploadDidttm from '../page/server/uploadDidttm.vue'
+import serverPvData from '../page/server/pvdata.vue'
+import serverCertifyDetail from '../page/server/certifyDetail.vue'
+
 
 // const routerPush = VueRouter.prototype.push
 // VueRouter.prototype.push = function push(location) {
@@ -81,11 +86,6 @@ const routes = [
     component: toSignCertify
   },
   {
-    path: '/uploadDidttm',
-    name: 'uploadDidttm',
-    component: uploadDidttm
-  },
-  {
     path: '/certifyDetail',
     name: 'certifyDetail',
     component: certifyDetail
@@ -104,7 +104,27 @@ const routes = [
     path: '/certifyPoster',
     name: 'certifyPoster',
     component: certifyPoster
-  }
+  },
+  {
+    path: '/server',
+    // name: 'server',
+    component: serverIndex,
+    children: [
+      {
+        path: 'uploadDidttm',
+        // name: 'uploadDidttm',
+        component: serverUploadDidttm
+      },
+      {
+        path: 'certifyDetail',
+        component: serverCertifyDetail
+      },
+      {
+        path: 'pvdata',
+        component: serverPvData
+      }
+    ]
+  },
 ]
 const router = new VueRouter({
   // mode: 'history',

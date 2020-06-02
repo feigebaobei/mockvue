@@ -47,6 +47,7 @@
     <!-- 弹层 -->
     <section class="confirmModel" v-show="formData.show" @click.self="closeModel">
       <section class="cont">
+        <p>您现在要签发该证书了。</p>
         <h2>请输入身份密码：</h2>
         <!-- <form action="#">
           <label for="password">身份官</label>
@@ -89,7 +90,7 @@ export default {
       chainData: {},
       calcHashCont: '',
       formData: {
-        show: true,
+        show: false,
         idpwd: ''
       }
     }

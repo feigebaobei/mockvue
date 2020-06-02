@@ -9,12 +9,14 @@
     <section class="inputBox">
 
       <form action="" class="form">
-        <div class="item" v-for="(value, item, index) in template.keys" :key="index">
+        <!-- <div class="item" v-for="(value, item, index) in template.keys" :key="index"> -->
+        <div class="item" v-for="(value, item, index) in formData.keys" :key="index">
           <!-- label的for属性是与input的id属性协同工作的，但是这里不能使用id值。因为为确定该id值是否在该页面的别的地方有使用。 -->
           <label :for="value.name" class="label">{{value.label}}</label>
           <!-- <input type="text" v-if="value.type === 'text'" :name="value.name" class="input" @change="changeCertCont(value.name, event)"> -->
           <!-- <input type="text" v-if="value.type === 'text'" :name="value.name" class="input" v-model="changeCertCont"> -->
-          <input type="text" v-if="value.type === 'text'" :name="value.name" class="input" @input="changeCertCont">
+          <!-- <input type="text" v-if="value.type === 'text'" :name="value.name" class="input" @input="changeCertCont"> -->
+          <input type="text" v-if="value.type === 'text'" :name="value.name" class="input" :value="value.default" @input="changeCertCont">
           <div v-if="value.type === 'radio'" class="radioIf">
             <div v-for="(subItem, subIndex) in value.options" :key="subIndex" class="radioFor">
               <input type="radio" :name="value.name" :value="subItem" :ref="`certify${value.name}`" @input="changeCertCont">
@@ -48,6 +50,7 @@
 
 <script>
 import instance from '@/lib/axiosInstance'
+import tokenSDKClient from 'token-sdk-client'
 export default {
   props: {},
   data () {
@@ -61,6 +64,11 @@ export default {
       mCont: '',
       model: {
         open: false
+      },
+      formData: {
+        // keys: [{
+
+        // }]
       }
     }
   },
@@ -79,35 +87,37 @@ export default {
       this.getData()
     },
     getData () {
-      instance({
-        url: '/claim/template',
-        method: 'get',
-        params: {
-          templateId: this.templateId
-        }
-      }).then(res => {
+      // instance({
+      //   url: '/claim/template',
+      //   method: 'get',
+      //   params: {
+      //     templateId: this.templateId
+      //   }
+      // })
+      tokenSDKClient.getTemplate(this.templateId)
+      .then(res => {
         this.template = res.data.data
+        this.formData.keys = res.data.data.keys
         this.mBg = {
           background: `url(${this.template.background})`
         }
         this.mCont = this.template.desc
+        this.replaceCont()
       }).catch(err => {
         console.log(err)
       })
     },
     replaceCont () {
-      let {desc, keys} = this.template
-      for (let [key, value] of Object.entries(keys)) {
-        let reg = `\\$${key}\\$`
-        desc.replace(reg, value)
+      this.mCont = this.template.desc
+      for (let [k, {default: v}] of Object.entries(this.formData.keys)) {
+        let reg = new RegExp(`\\$${k}\\$`)
+        this.mCont = this.mCont.replace(reg, v === '' ? `$${k}$` : v)
       }
-      this.mCont = desc
     },
     changeCertCont (event) {
       let {name, value} = event.target
-      let reg = new RegExp(`\\$${name}\\$`)
-      console.log(name, value)
-      this.mCont = this.template.desc.replace(reg, value === '' ? `$${name}$` : value)
+      this.formData.keys[name].default = value
+      this.replaceCont()
     },
     openModel () {
       this.model.open = true
@@ -119,9 +129,8 @@ export default {
       event.preventDefault()
       // instance()
       let expire = this.expire
-      console.log(expire)
+      // // console.log(expire)
       let [y, m, d] = expire.split(/[，,/-\s\\]/)
-      // console.log(a)
       let date = new Date()
       date.setFullYear(y)
       date.setMonth(m - 1)
@@ -129,9 +138,49 @@ export default {
       date.setHours(0)
       date.setMinutes(0)
       date.setSeconds(0)
-      date.setMilliseconds(0)
-      console.log(date, date.getTime())
+      // date.setMilliseconds(0)
+      // let hashCont = ''
+      // for (let [k, obj] of Object.entries(this.formData.keys)) {
+      //   let hashStr = tokenSDKClient.bytesToStrHex(new tokenSDKClient.sm3().sum(obj.default))
+      //   let reg = new RegExp(`\\$${k}\\$`, 'gm')
+      //   hashCont = this.template.desc.replace(reg, hashStr)
+      // }
+      // hashCont = tokenSDKClient.bytesToStrHex(new tokenSDKClient.sm3().sum(hashCont))
+      // // sign
+      // let sign = ''
+      let certifyData = {
+        // key: value
+      }
 
+      // tokenSDKClient.applyCertify(this.templateId, hashCont, date.getTime(), sign)
+      // instance(this.templateId, certifyData)
+      instance({
+        url: '/claim/applyCertify',
+        method: 'post',
+        data: {
+          templateId: this.templateId,
+          certifyData: certifyData,
+          expire: date.getTime()
+        }
+      })
+      .then(res => {
+        console.log('res', res)
+        let r = confirm('已经创建成功证书。是否进入该证书详情页面。')
+        if (r) {
+          this.$router.push({
+            path: '/server/certifyDetail',
+            query: {
+              templateId: res.data.data.templateId,
+              claim_sn: res.data.data.claim_sn
+            }
+          })
+        }
+      }).catch(err => {
+        console.log('err', err)
+      })
+    },
+    calcHashCont () {
+      return tokenSDKClient
     }
   },
   created () {},
