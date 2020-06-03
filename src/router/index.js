@@ -6,14 +6,15 @@ import cont from '../page/cont.vue'
 import pvdata from '../page/pvdata.vue'
 import staticp from '../page/staticp.vue'
 import testTokenSDKClient from '../page/testTokenSDKClient.vue'
-import certifyList from '../page/certifyList.vue'
-import applyCertify from '../page/applyCertify.vue'
-import certifyOfServer from '../page/certifyOfServer.vue'
-import toSignCertify from '../page/toSignCertify.vue'
-import certifyDetail from '../page/certifyDetail.vue'
-import certifyCheck from '../page/certifyCheck.vue'
-import certifySign from '../page/certifySign.vue'
-import certifyPoster from '../page/certifyPoster.vue'
+
+import certifyList from '../page/server/certifyList.vue'
+import applyCertify from '../page/server/applyCertify.vue'
+import certifyOfServer from '../page/server/certifyOfServer.vue'
+import toSignCertify from '../page/server/toSignCertify.vue'
+import certifyDetail from '../page/server/certifyDetail.vue'
+import certifyCheck from '../page/server/certifyCheck.vue'
+import certifySign from '../page/server/certifySign.vue'
+import certifyPoster from '../page/server/certifyPoster.vue'
 
 import serverIndex from '../page/server/index.vue'
 import serverUploadDidttm from '../page/server/uploadDidttm.vue'
@@ -71,41 +72,6 @@ const routes = [
     component: applyCertify
   },
   {
-    path: '/certifyList',
-    name: 'certifyList',
-    component: certifyList
-  },
-  {
-    path: '/certifyOfServer',
-    name: 'certifyOfServer',
-    component: certifyOfServer
-  },
-  {
-    path: '/toSignCertify',
-    name: 'toSignCertify',
-    component: toSignCertify
-  },
-  {
-    path: '/certifyDetail',
-    name: 'certifyDetail',
-    component: certifyDetail
-  },
-  {
-    path: '/certifyCheck',
-    name: 'certifyCheck',
-    component: certifyCheck
-  },
-  {
-    path: '/certifySign',
-    name: 'certifySign',
-    component: certifySign
-  },
-  {
-    path: '/certifyPoster',
-    name: 'certifyPoster',
-    component: certifyPoster
-  },
-  {
     path: '/server',
     // name: 'server',
     component: serverIndex,
@@ -122,6 +88,41 @@ const routes = [
       {
         path: 'pvdata',
         component: serverPvData
+      },
+      {
+        path: 'certifyList',
+        name: 'certifyList',
+        component: certifyList
+      },
+      {
+        path: 'certifyOfServer',
+        name: 'certifyOfServer',
+        component: certifyOfServer
+      },
+      {
+        path: 'toSignCertify',
+        name: 'toSignCertify',
+        component: toSignCertify
+      },
+      {
+        path: 'certifyDetail',
+        name: 'certifyDetail',
+        component: certifyDetail
+      },
+      {
+        path: 'certifyCheck',
+        name: 'certifyCheck',
+        component: certifyCheck
+      },
+      {
+        path: 'certifySign',
+        name: 'certifySign',
+        component: certifySign
+      },
+      {
+        path: 'certifyPoster',
+        name: 'certifyPoster',
+        component: certifyPoster
       }
     ]
   },

@@ -98,7 +98,6 @@ export default {
       // this.certify.claim_sn = '12345fd6d964575b3d42bf959' // 在测试是才写死
       // console.log(tokenSDKClient)
       this.getCertifyTemplat()
-      this.getCertityData()
       this.opModel()
     },
     getCertifyTemplat () {
@@ -119,9 +118,6 @@ export default {
       }).catch(err => {
         console.log('err', err)
       })
-    },
-    getCertityData () {
-      
     },
     getCertifyFingerPrint () {
       tokenSDKClient.getCertifyFingerPrint(this.certify.claim_sn).then(res => {

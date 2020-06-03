@@ -114,7 +114,8 @@ export default {
     // reqDidttmMt () {}
     updataPvData () {
       let did = this.didttm.name.match(/^\w*(?=\.ttm$)/)[0]
-      did = `did:ttm:${did}`
+      // did = `did:ttm:${did}`
+      // console.log('did', did, this.didttm)
       instance({
         url: '/private/pvdata',
         method: 'post',

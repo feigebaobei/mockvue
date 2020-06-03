@@ -229,7 +229,7 @@ export default {
       didttm: {
         name: '微信',
         phone: '18512345678',
-        pdid: 'did:ttm:a012349681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608',
+        pdid: 'did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608',
         node: 'https://www.xxxxx.com',
         prikey: '01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a'
       }
@@ -279,7 +279,8 @@ export default {
       // console.log('ct', JSON.stringify(this.didttm))
     },
     opServerDidttm () {
-      let ct = tokenSDKServer.encryptDidttm(JSON.stringify(this.didttm), '123456')
+      // let ct = tokenSDKServer.encryptDidttm(JSON.stringify(this.didttm), '123456')
+      let ct = tokenSDKServer.encryptDidttm('tank', 'a012349681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608', JSON.stringify(this.didttm), '123456')
       console.log('ct', ct)
       let mt = tokenSDKServer.decryptDidttm(ct, '123456')
       console.log('mt', mt)

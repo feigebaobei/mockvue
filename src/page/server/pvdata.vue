@@ -1,40 +1,34 @@
 <template>
   <div class="pvdata">
-    <p>服务端pvdata页面</p>
-    <section class="logined" v-if="hasPvData">
-      <p>这个页面一共有5个部分。</p>
-      <h3 class="title">用户属性</h3>
-      <section class="ui">
+    <p>服务端pvdata页面。这个页面一共有5个部分。</p>
+    <h3 class="title">身份属性</h3>
+    <p v-for="(item, index) in Object.keys(pvData.property)" :key="index">
+      <span class="key">{{item}}: </span>
+      <span class="value">{{pvData.property[item]}}</span>
+    </p>
+    <h3 class="title">身份证书</h3>
+    <section class="certifyBox">
+      <section class="certifyItem" v-for="(item, index) in pvData.manageCertifies" :key="index" @click="gotoCertifyDetail(item.templateId, item.claim_sn)">
+        <div class="left">
+          <h4 class="title">{{item.templateTitle}}</h4>
+          <p>{{item.claim_sn}}</p>
+        </div>
+        <img :src="arrows" alt="" class="right">
+      </section>
+    </section>
+    <h3 class="title">关联证书</h3>
+    <p>您的关联证书里没有内容！</p>
+    <h3 class="title">私有数据</h3>
+    <p>您的私有数据里没有内容！</p>
+    <h3 class="title">通讯录</h3>
+    <p>您的通讯录里没有内容！</p>
+      <!-- <section class="ui">
         <p v-for="(value, item, index) in pvData.property" :key="index" class="item">
           <span>{{item}}: </span>
           <img class="avatar" :src="pvData.property.avatar" alt="" v-if="item === 'avatar'">
           <span v-else>{{pvData.property[item]}}</span>
         </p>
-      </section>
-      <!-- <h3 class="title">证书（身份证书、通用证书）</h3> -->
       <h3 class="title">验证过的证书 通用证书</h3>
-      <!-- <section class="certifyItem">
-        <h4 class="title">{{certifyData.title}}</h4>
-        <p class="cont">{{certifyData.content}}</p>
-        <section class="qrBox">
-          <section class="item">
-            <canvas id="signQrMy" ref="signQrMy"></canvas>
-            <p>验证二维码</p>
-          </section>
-          <section class="item">
-            <canvas id="checkQrMy" ref="checkQrMy"></canvas>
-            <p>核验二维码</p>
-          </section>
-        </section>
-        <p>签名列表</p>
-        <p v-for="(item, index) in certifyData.signList" :key="index" class="signItem">
-          <span class="title">{{item.title}}</span>
-          <br>
-          <span class="sign">{{JSON.stringify(item.sign)}}</span>
-          <br>
-          <span class="expireTime">过期时间：{{item.endtime}}</span>
-        </p>
-      </section> -->
       <section class="certifyBox">
         <section class="certifyItem" v-for="(item, index) in pvData.manageCertifies" :key="index" @click="gotoCertifyDetail(item.templateId, item.claim_sn)">
           <div class="left">
@@ -51,7 +45,6 @@
           <span>{{item.phone}}</span>
         </p>
       </section>
-      <!-- <h3 class="title">验证过的证书</h3> -->
       <h3 class="title">身份证书</h3>
       <section class="certifyBox">
         <section class="certifyItem" v-for="(item, index) in pvData.identityCertifies" :key="index" @click="gotoCertifyDetail(item.templateId, item.claim_sn)">
@@ -63,11 +56,7 @@
         </section>
       </section>
       <button id="getPvDataBox" @click="getPvDataBox">刷新pvdata</button>
-    </section>
-    <section class="unlogined" v-else>
-      <p>您没有拉取pvdata</p>
-      <button id="gotoLogin" @click="gotoLogin">去登录页面，拉取pvdata</button>
-    </section>
+    </section> -->
   </div>
 </template>
 
@@ -82,102 +71,91 @@ export default {
   props: {},
   data () {
     return {
-      did: 'did:ttm:a012349681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608',
+      // did: 'did:ttm:u043829681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608',
       arrows: arrows,
-      formData: {
-        phone: '12345',
-        checkCode: '2456',
-        udidList: [{
-          title: '',
-          udid: ''
-        }],
-        selectedUdid: '',
-        idpwd: ''
-      },
-      certifyData: {
-        title: '',
-        content: '',
-        signList: []
-      },
-      checkSignCertifyData: {
-        title: '',
-        content: '',
-        signList: []
-      },
-      // manageCertifies: [],
-      pvData: this.$store.state.userInfo.pvData,
+      // formData: {
+      //   phone: '12345',
+      //   checkCode: '2456',
+      //   udidList: [{
+      //     title: '',
+      //     udid: ''
+      //   }],
+      //   selectedUdid: '',
+      //   idpwd: ''
+      // },
+      // certifyData: {
+      //   title: '',
+      //   content: '',
+      //   signList: []
+      // },
+      // checkSignCertifyData: {
+      //   title: '',
+      //   content: '',
+      //   signList: []
+      // },
+      // // manageCertifies: [],
+      // pvData: this.$store.state.userInfo.pvData,
+      pvData: {
+        contacts: [],
+        did: '',
+        identityCertifies: [],
+        manageCertifies: [],
+        property: {},
+        relationDid: '',
+        superDid: '',
+        version: ''
+      }
     }
   },
   computed: {
-    hasPvData () {
-      return this.$store.state.userInfo.hasPvData
-    },
-    // pvData () {
-    //   let temp = this.$store.state.userInfo.pvData
-    //   // this.manageCertifies = temp.manageCertifies
-    //   return temp
-    // },
-    keyStore () {
-      return this.$store.getters.getKeyStore
-    },
-    // ui () {
-    //   this.pvData.
-    // }
   },
   components: {
     // basicvue
   },
   methods: {
     init () {
-      this.getPvDataBox()
+      this.getPvData()
     },
-    gotoLogin () {
-      this.$router.push({
-        path: '/login'
-      })
-    },
-    // 请求私密数据
-    getPvDataBox (event) {
-      if (event) {
-        event.preventDefault()
-      }
+    getPvData () {
       instance({
         url: '/private/pvdata',
         method: 'get',
         params: {
-          did: this.did
+          did: 'a012349681e922731094502ebffdf1f10389c3ad11c8a67847c68f0482e608',
+          method: 'get'
+          // method: 'update'
         }
       }).then(res => {
         console.log('res', res)
+        // this.pvData = res.data.data
+        this.pvData.contacts = res.data.data.contacts
+        this.pvData.did = res.data.data.did
+        this.pvData.identityCertifies = res.data.data.identityCertifies
+        this.pvData.manageCertifies = res.data.data.manageCertifies
+        this.pvData.property = res.data.data.property
+        this.pvData.relationDid = res.data.data.relationDid
+        this.pvData.superDid = res.data.data.superDid
+        this.pvData.version = res.data.data.version
       }).catch(err => {
         console.log('err', err)
       })
-      // tokenSDKClient.getPvData(this.pvData.did).then(res => {
-      //   let pvData = tokenSDKClient.decryptPvData(res.data.data, this.keyStore.privatekey)
-      //   return pvData
-      // }).then(res => {
-      //   this.$store.dispatch('modifyPvData', {pvData: res})
-      //   // this.init()
-      // }).catch(err => {
-      //   console.log('err', err)
-      // })
-    },
-    opCont (desc, data) {
-      for (let [key, value] of Object.entries(data)) {
-        let reg = new RegExp(`\\$${key}\\$`, 'gm')
-        desc = desc.replace(reg, value)
-      }
-      return desc
-    },
-    gotoCertifyDetail (templateId, claim_sn) {
-      this.$router.push({
-        path: '/certifyDetail',
-        query: {
-          templateId: templateId,
-          claim_sn: claim_sn
-        }
-      })
     }
+    // opCont (desc, data) {
+    //   for (let [key, value] of Object.entries(data)) {
+    //     let reg = new RegExp(`\\$${key}\\$`, 'gm')
+    //     desc = desc.replace(reg, value)
+    //   }
+    //   return desc
+    // },
+    // gotoCertifyDetail (templateId, claim_sn) {
+    //   this.$router.push({
+    //     path: '/certifyDetail',
+    //     query: {
+    //       templateId: templateId,
+    //       claim_sn: claim_sn
+    //     }
+    //   })
+    // }
   },
   created () {},
   mounted () {
@@ -211,7 +189,6 @@ export default {
   .avatar
     width: 100px
 
-  #gotoLogin
   #getPvDataBox
     margin: 16px 0
     display: block
