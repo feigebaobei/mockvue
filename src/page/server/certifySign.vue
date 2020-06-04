@@ -49,10 +49,16 @@
       <section class="cont">
         <p>您现在要签发该证书了。</p>
         <h2>请输入身份密码：</h2>
-        <!-- <form action="#">
-          <label for="password">身份官</label>
-        </form> -->
-        <input type="password" class="input" v-model="formData.idpwd">
+        <form action="#" class="form">
+          <div class="item">
+            <label for="">身份密码</label>
+            <input type="password" class="input" v-model="formData.idpwd">
+          </div>
+          <div class="item">
+            <label for="">说明</label>
+            <input type="text" class="input" v-model="formData.explain">
+          </div>
+        </form>
         <button class="button" @click="signCertify">确定</button>
       </section>
     </section>
@@ -62,6 +68,7 @@
 <script>
 // import { basicvue } from '@/components/oasiscare'
 import tokenSDKClient from 'token-sdk-client'
+import instance from '@/lib/axiosInstance'
 import JsBarcode from 'jsbarcode'
 export default {
   props: {},
@@ -91,7 +98,8 @@ export default {
       calcHashCont: '',
       formData: {
         show: false,
-        idpwd: ''
+        idpwd: '',
+        explain: ''
       }
     }
   },
@@ -185,31 +193,28 @@ export default {
     },
     // 签发证书
     signCertify () {
-      // var r = confirm('是')
-      // 是否可以解密
-      tokenSDKClient.getDidttm(this.pvData.did).then(res => {
-        return tokenSDKClient.decryptDidttm(res.data.data, this.$store.getters.getKeyStore.privatekey)
-      }).then(bool => {
-        if (bool) {
-          let keys = tokenSDKClient.sm2.genKeyPair(this.$store.getters.getKeyStore.privatekey)
-          let now = new Date().getTime()
-          let sign = keys.signSha512(`the claimSN=${this.certify.claim_sn}and${this.certify.templateId}=${this.certify.hashValue}end at${now}validated by${this.pvData.did}`)
-          tokenSDKClient.signCertify(this.pvData.did, this.certify.claim_sn, this.certify.templateId, this.certify.hashValue, now, sign).then(res => {
-            // console.log('res', res)
-            if (res.data.result) {
-              alert('签发成功')
-            } else {
-              alert('签发失败')
-            }
-          }).catch(err => {
-            alert('签发失败')
-            console.log('err', err)
-          })
-        } else {
-          alert('身份密码不正确')
+      instance({
+        url: '/claim/signCertify',
+        method: 'post',
+        data: {
+          // claim_sn: this.certify.claim_sn,
+          claim_sn: '02b22a5e81e840176d9f381ec',
+          idpwd: this.formData.idpwd,
+          explain: this.formData.explain
         }
+      }).then(res => {
+        console.log(res)
+        if (res.data.result) {
+          alert('签发成功')
+        } else {
+          throw new Error()
+        }
+      }).catch(err => {
+        alert('签发失败')
+        console.log(err)
       })
       this.formData.idpwd = ''
+      this.formData.explain = ''
       this.closeModel()
     }
   },
@@ -299,17 +304,26 @@ export default {
         width: 600px
         padding: 20px
 
-        .input
-          height: 28px
-          width: 360px
-          margin-bottom: 20px
-
-        .item
+        .form
+          width: 460px
           display: flex
-          margin-bottom: 6px
+          justify-content: space-between
+          flex-wrap: wrap
 
-          .label
-            width: 100px
+          .input
+            height: 28px
+            width: 360px
+
+          .item
+            display: flex
+            margin-bottom: 20px
+            flex-basis: 100%
+            justify-content: space-between
+            align-items: center
+
+            .label
+              width: 100px
+
 
 
 </style>

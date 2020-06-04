@@ -151,6 +151,9 @@ export default {
       let certifyData = {
         // key: value
       }
+      for (let ele of Object.keys(this.formData.keys)) {
+        certifyData[ele] = this.formData.keys[ele].default
+      }
 
       // tokenSDKClient.applyCertify(this.templateId, hashCont, date.getTime(), sign)
       // instance(this.templateId, certifyData)

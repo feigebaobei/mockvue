@@ -56,6 +56,7 @@ import QRCode from 'qrcode'
 import tokenSDKClient from 'token-sdk-client'
 import JsBarcode from 'jsbarcode'
 import XEClipboard from 'xe-clipboard'
+import instance from '@/lib/axiosInstance'
 export default {
   props: {},
   data () {
@@ -94,29 +95,33 @@ export default {
   },
   methods: {
     init () {
-      // console.log(XEClipboard)
-      // this.certify.claim_sn = '12345fd6d964575b3d42bf959' // 在测试是才写死
-      // console.log(tokenSDKClient)
-      this.getCertifyTemplat()
-      this.opModel()
+      this.getCertTempAndCertData()
     },
-    getCertifyTemplat () {
-      tokenSDKClient.getTemplate(this.templateId).then(res => {
-        let {title, desc, background} = res.data.data
-        this.certify.title = title
-        this.certify.cont = desc
-        let certifyData = this.$store.getters.getPvData.manageCertifies.filter((item) => item.claim_sn === this.certify.claim_sn)[0].data || {}
-        // console.log('certifyData', certifyData, certifyData.gender, certifyData.identify)
-        // this.certify.data = certifyData // 这样会浅复制
-        this.certify.data = JSON.parse(JSON.stringify(certifyData)) // 这样避免浅复制
+    getCertTempAndCertData () {
+      Promise.all([this.getCertifyTemplat(), this.getCertifyData()]).then(([resTemplate, resCertifyData]) => {
+        this.certify.title = resTemplate.data.data.title
+        this.certify.cont = resTemplate.data.data.desc
+        this.certify.background = resTemplate.data.data.background
+        this.certify.data = resCertifyData.data.data.data
         for (let [key, value] of Object.entries(this.certify.data)) {
           let reg = new RegExp(`\\$${key}\\$`, 'gm')
           this.certify.cont = this.certify.cont.replace(reg, value)
         }
         this.getCertifyFingerPrint()
-        this.certify.background = background
-      }).catch(err => {
-        console.log('err', err)
+        this.opModel()
+      })
+    },
+    getCertifyTemplat () {
+      return tokenSDKClient.getTemplate(this.templateId)
+    },
+    getCertifyData () {
+      return instance({
+        url: '/claim/certifyData',
+        method: 'get',
+        params: {
+          // claim_sn: this.certify.claim_sn
+          claim_sn: '02b22a5e81e840176d9f381ec' // 为了走通逻辑所以写死值
+        }
       })
     },
     getCertifyFingerPrint () {
@@ -157,7 +162,18 @@ export default {
           hasHash: false
         }
       }
-      tokenSDKClient.certifySignUrl(this.certify.claim_sn, this.templateId, certifyData).then(res => {
+      console.log(this.certify.claim_sn)
+      instance({
+        url: '/claim/certifySignURL',
+        method: 'post',
+        data: {
+          // claim_sn: this.certify.claim_sn,
+          claim_sn: '02b22a5e81e840176d9f381ec',
+          // keqwertyhgfdsasdfbnbvds: '234tgfds'
+          // templateId: this.templateId,
+          // certifyData: this.certify.data // 证书数据应该在服务端从数据库中取得。
+        }
+      }).then(res => {
         let url = `${window.location.origin}`
         this.$router.mode === 'hash' ? url += '/#' : ''
         url += `/certifySign/?certifySignUuid=${res.data.data}`
@@ -165,7 +181,7 @@ export default {
         alert('已经复制签发页面的url。该url有效期为10min。')
         // 为了开发，所以进入签发页面。
         this.$router.push({
-          path: '/certifySign',
+          path: '/server/certifySign',
           query: {
             certifySignUuid: `${res.data.data}`
           }
@@ -176,7 +192,7 @@ export default {
     },
     gotoCertifyCheck () {
       this.$router.push({
-        path: '/certifyCheck',
+        path: '/server/certifyCheck',
         query: {
           claim_sn: this.certify.claim_sn,
           templateId: this.templateId
@@ -184,11 +200,25 @@ export default {
       })
     },
     cancel () {
-      tokenSDKClient.cancelCertify(this.certify.claim_sn, this.$store.getters.getPvData.did, this.certify.hashValue, new Date().getTime(), this.$store.getters.getKeyStore.privatekey).then(() => {
-        alert('已经取消证书')
-      }).catch(err => {
-        console.log('err', err)
+      instance({
+        url: '/claim/cancel',
+        method: 'post',
+        data: {
+          // claim_sn: this.certify.claim_sn,
+          claim_sn: '02b22a5e81e840176d9f381ec'
+          // 其它数据由服务端生成或得到。
+        }
+      }).then(() => {
+        alert('取消成功')
+      }).catch(() => {
+        alert('取消失败')
+
       })
+      // tokenSDKClient.cancelCertify(this.certify.claim_sn, this.$store.getters.getPvData.did, this.certify.hashValue, new Date().getTime(), this.$store.getters.getKeyStore.privatekey).then(() => {
+      //   alert('已经取消证书')
+      // }).catch(err => {
+      //   console.log('err', err)
+      // })
     },
     showModel () {
       this.selectModel.show = true
@@ -197,28 +227,14 @@ export default {
       this.selectModel.show = false
     },
     opModel () {
-      let certify = this.$store.getters.getPvData.manageCertifies.filter((item) => item.claim_sn === this.certify.claim_sn)[0] || {}
-      for (let [key] of Object.entries(certify.data)) {
+      // let certify = this.$store.getters.getPvData.manageCertifies.filter((item) => item.claim_sn === this.certify.claim_sn)[0] || {}
+      // for (let [key] of Object.entries(certify.data)) {
+      for (let [key] of Object.entries(this.certify.data)) {
         this.selectModel.certifyDataItem.push(key)
       }
     },
     gotoCertifyPoster (event) {
       event.preventDefault()
-      // let certifyData = JSON.parse(JSON.stringify(this.certify.data))
-      let certifyData = {}
-      for (let [key, value] of Object.entries(this.certify.data)) {
-        certifyData[key] = {
-          value: value,
-          hasHash: false
-        }
-      }
-      for (let element of this.selectModel.hashDataItem) {
-        // this.certify.data[element] = new tokenSDKClient.sm3().sum(this.certify.data[element])
-        certifyData[element] = {
-          value: new tokenSDKClient.sm3().sum(this.certify.data[element]),
-          hasHash: true
-        }
-      }
       let expire = new Date()
       let [y, m, d] = this.selectModel.expireStr.split(/[，,/-\s\\]/)
       expire.setFullYear(y)
@@ -229,17 +245,27 @@ export default {
       expire.setSeconds(0)
       expire.setMilliseconds(0)
       expire = expire.getTime()
-      // console.log('certifyData', certifyData)
-      tokenSDKClient.setTemporaryCertifyData(this.certify.claim_sn, this.templateId, certifyData, expire, this.selectModel.purpose).then(res => {
-        // console.log('res', res)
+      instance({
+        url: '/claim/genPoster',
+        method: 'post',
+        data: {
+          // claim_sn: this.certify.claim_sn
+          claim_sn: '02b22a5e81e840176d9f381ec', // 为了走通逻辑所以写死值
+          expire: expire,
+          purpose: this.selectModel.purpose,
+          hashDataItem: this.selectModel.hashDataItem
+        }
+      }).then(res => {
+        console.log('res', res)
         this.$router.push({
-          path: '/certifyPoster',
+          path: '/server/certifyPoster',
           query: {
-          temporaryID: res.data.data.temporaryID
+            temporaryID: res.data.data.temporaryID
           }
         })
       }).catch(err => {
         console.log('err', err)
+        alert('生成海报失败')
       })
     }
   },
