@@ -15,7 +15,7 @@
         <router-link to="/server/pvdata" class="navItem">服务端pvdata</router-link>
         <router-link to="/server/certifyList" class="navItem">申请证书</router-link>
         <router-link to="/server/toSignCertify" class="navItem">待签发证书</router-link>
-        <router-link to="/server/certifyOfServer" class="navItem">服务端的证书</router-link>
+        <!-- <router-link to="/server/certifyOfServer" class="navItem">服务端的证书</router-link> -->
       </div>
       <div class="userInfoBox" v-if="name || avatar">
         <span class="name">{{name}}</span>

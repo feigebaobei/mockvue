@@ -8,7 +8,7 @@
       <div class="barBox">
         <img src="" alt="" id="bar">
       </div>
-      <canvas id="canvas" ref="qr" @click="gotoCertifyCheck"></canvas>
+      <!-- <canvas id="canvas" ref="qr" @click="gotoCertifyCheck"></canvas> -->
       <section class="signBox" v-for="(item, index) in certify.signList" :key="index">
         <h4 v-if="index === 0">申明者: {{item.name}} &nbsp;&nbsp;&nbsp;&nbsp; 状态 {{item.status}}</h4>
         <h4 v-else>签发者: {{item.name}} &nbsp;&nbsp;&nbsp;&nbsp; 状态 {{item.status}}</h4>
@@ -52,9 +52,9 @@
 
 <script>
 // import { basicvue } from '@/components/oasiscare'
-import QRCode from 'qrcode'
+// import QRCode from 'qrcode'
 import tokenSDKClient from 'token-sdk-client'
-import JsBarcode from 'jsbarcode'
+// import JsBarcode from 'jsbarcode'
 import XEClipboard from 'xe-clipboard'
 import instance from '@/lib/axiosInstance'
 export default {
@@ -127,17 +127,6 @@ export default {
     getCertifyFingerPrint () {
       tokenSDKClient.getCertifyFingerPrint(this.certify.claim_sn).then(res => {
         this.certify.hashValue = res.data.data.hashCont || 'none hash value.'
-        let url = `${window.location.origin}?claim_sn=${this.certify.claim_sn}&templateId=${this.templateId}`
-        // console.log(url)
-        // let url = this.certify.hashValue
-        // 渲染barcode
-        JsBarcode('#bar', this.certify.hashValue)
-        // 渲染qr
-        QRCode.toCanvas(this.$refs.qr, url, error => {
-          if (error) {
-            console.log('error', error)
-          }
-        })
         this.certify.signList = res.data.data.signList.map((item) => {
           let date = new Date(Number(item.endtime))
           let [y, m, d, h, mm, s] = [date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()]
@@ -149,10 +138,24 @@ export default {
             status: item.status
           }
         })
+        // this.renderQR()
       }).catch(err => {
         console.log('err', err)
       })
     },
+    // renderQR () {
+    //   let url = `${window.location.origin}?claim_sn=${this.certify.claim_sn}&templateId=${this.templateId}`
+    //   // console.log(url)
+    //   // let url = this.certify.hashValue
+    //   // 渲染barcode
+    //   JsBarcode('#bar', this.certify.hashValue)
+    //   // 渲染qr
+    //   QRCode.toCanvas(this.$refs.qr, url, error => {
+    //     if (error) {
+    //       console.log('error', error)
+    //     }
+    //   })
+    // },
     // 进入证书签发页面
     gotoCertifySign () {
       let certifyData = {}
@@ -214,11 +217,6 @@ export default {
         alert('取消失败')
 
       })
-      // tokenSDKClient.cancelCertify(this.certify.claim_sn, this.$store.getters.getPvData.did, this.certify.hashValue, new Date().getTime(), this.$store.getters.getKeyStore.privatekey).then(() => {
-      //   alert('已经取消证书')
-      // }).catch(err => {
-      //   console.log('err', err)
-      // })
     },
     showModel () {
       this.selectModel.show = true

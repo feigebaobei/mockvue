@@ -48,8 +48,12 @@
     <section class="confirmModel" v-show="formData.show" @click.self="closeModel">
       <section class="cont">
         <p>您现在要签发该证书了。</p>
-        <h2>请输入身份密码：</h2>
+        <h2>请输入信息：</h2>
         <form action="#" class="form">
+          <div class="item">
+            <label for="">过期时间</label>
+            <input type="date" class="input" v-model="formData.expire">
+          </div>
           <div class="item">
             <label for="">身份密码</label>
             <input type="password" class="input" v-model="formData.idpwd">
@@ -98,6 +102,7 @@ export default {
       calcHashCont: '',
       formData: {
         show: false,
+        expire: '',
         idpwd: '',
         explain: ''
       }
@@ -200,7 +205,8 @@ export default {
           // claim_sn: this.certify.claim_sn,
           claim_sn: '02b22a5e81e840176d9f381ec',
           idpwd: this.formData.idpwd,
-          explain: this.formData.explain
+          explain: this.formData.explain,
+          expire: this.formData.expire // 过期时间。
         }
       }).then(res => {
         console.log(res)

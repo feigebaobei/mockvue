@@ -9,6 +9,11 @@
     <button @click="opDidttm">生成用于测试的didttm</button>
     <button @click="opServerPvdata">生成用于测试的pvdata</button>
     <button @click="opServerDidttm">测试服务端的加解密didttm</button>
+    <p>test</p>
+    <button @click="testSm4Li">testSm4Li</button>
+    <button @click="test">test</button>
+    <button @click="getImgBase64">pic => base64</button>
+    <button @click="picToBase64(small)">pic => base64</button>
     <!-- <basicvue></basicvue> -->
   </div>
 </template>
@@ -19,11 +24,16 @@ import tokenSDKClient from 'token-sdk-client'
 import tokenSDKServer from 'token-sdk-server'
 // import {Base64} from 'js-base64'
 // import api from '@/lib/axiosInstance'
+// import photo from '@/data/photo.jpeg'
+// import idCardFront from '@/data/idCardFront.jpeg'
+// import half from '@/data/half.png'
+import small from '@/data/small.png'
 
 export default {
   props: {},
   data () {
     return {
+      small: small,
       priStr: '01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a',
       keyStore: {
         privatekey: "01837f014db7fc5acd914f53839bdb5dbf4cd80ecbbb7bf966ba9619f34b627a"
@@ -292,7 +302,84 @@ export default {
       console.log('ct', ct, `[${ct.join(', ')}]`)
       let mt = tokenSDKClient.decryptPvData(ct, this.didttm.prikey)
       console.log('mt', mt)
+    },
+    testSm4Li () {
+      // console.log(tokenSDKServer)
+      // let mt = '616263'
+      // let key = [32, 44, 185, 98, 172, 89, 7, 91, 150, 75, 7, 21, 45, 35, 75, 112]
+      let mt = 'abc'
+      let key = 123
+      let ct = tokenSDKServer.sm4Li.encrypt(mt, key)
+      console.log('ct', ct)
+      console.log('mt', tokenSDKServer.sm4Li.decrypt(ct, key))
+      // console.log('mt', tokenSDKServer.sm4Li.decrypt([132, 33, 70, 107, 253, 224, 251, 27, 26, 50, 20, 11, 85, 154, 67, 145, 93, 28, 195, 120, 11, 75, 119, 4, 164, 124, 233, 212, 25, 212, 91, 166, 227, 250, 37, 217, 24, 138, 47, 9, 95, 8, 97, 18, 250, 69, 41, 220], key))
+      // console.log('mt', tokenSDKServer.sm4Li.decrypt([35, 214, 160, 88, 170, 161, 217, 152, 169, 77, 1, 3, 19, 168, 109, 193, 169, 34, 108, 233, 216, 203, 132, 72, 80, 7, 144, 184, 233, 194, 135, 223, 86, 78, 36, 2, 159, 85, 153, 111, 71, 6, 52, 222, 208, 180, 4, 161], key))
+      // console.log('mt', tokenSDKServer.sm4Li.decrypt([52, 246, 128, 22, 128, 27, 170, 165, 84, 7, 31, 87, 252, 233, 98, 24, 234, 245, 68, 168, 192, 87, 20, 173, 183, 86, 20, 62, 103, 171, 114, 221, 165, 231, 96, 103, 90, 38, 129, 109, 196, 17, 170, 135, 237, 213, 231, 113], key))
+      // console.log('mt', tokenSDKServer.sm4Li.decrypt([148, 148, 75, 92, 55, 132, 189, 182, 143, 50, 127, 22, 116, 144, 52, 175, 204, 168, 234, 17, 225, 170, 163, 149, 30, 70, 157, 37, 243, 13, 125, 190, 229, 100, 80, 53, 191, 25, 100, 10, 186, 220, 224, 91, 114, 20, 76, 206], key))
+      // console.log('mt', tokenSDKServer.sm4Li.decrypt([198, 240, 81, 152, 93, 236, 47, 140, 144, 31, 142, 214, 144, 46, 253, 95, 167, 170, 146, 115, 112, 143, 12, 119, 169, 91, 56, 198, 150, 231, 96, 133, 80, 245, 34, 226, 88, 251, 216, 28, 216, 4, 196, 96, 31, 23, 103, 138], key))
+
+      // tokenSDKServer.sm4Li.test()
+    },
+    test () {
+      let arr = ['8421466bfde0fb1b1a32140b559a43915d1cc3780b4b7704a47ce9d419d45ba6e3fa25d9188a2f095f086112fa4529dc', '23d6a058aaa1d998a94d010313a86dc1a9226ce9d8cb8448500790b8e9c287df564e24029f55996f470634ded0b404a1', '34f68016801baaa554071f57fce96218eaf544a8c05714adb756143e67ab72dda5e760675a26816dc411aa87edd5e771', '94944b5c3784bdb68f327f16749034afcca8ea11e1aaa3951e469d25f30d7dbee5645035bf19640abadce05b72144cce', 'c6f051985dec2f8c901f8ed6902efd5fa7aa9273708f0c77a95b38c696e7608550f522e258fbd81cd804c4601f17678a']
+      let i = 0
+      while (i < 5) {
+        tokenSDKServer.sm4Li.test(arr[i])
+        i++
+      }
+    },
+    // pic => base64
+    image2Base64 (img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        var dataURL = canvas.toDataURL("image/png");
+        return dataURL;
+    },
+    getImgBase64 () {
+        // console.log('photo', photo)
+        var base64="";
+        var img = new Image();
+        // img.src="img/test.jpg";
+        // img.src = photo
+        // img.src = idCardFront
+        // img.src = half
+        img.src = small
+        let that = this
+        img.onload=function(){
+            base64 = that.image2Base64(img);
+            // alert(base64);
+            // let reg = new RegExp('base64,', 'ig')
+            // console.log(base64.indexOf(reg))
+            base64 = base64.slice(base64.indexOf(';base64,') + 8)
+            console.log(base64)
+        }
+    },
+    picToBase64 (image, fidelity) {
+      let base64 = ''
+      let img = new Image()
+      img.src = image
+      return new Promise((resolve) => {
+        img.onload = () => {
+          let canvas = document.createElement('canvas')
+          canvas.width = img.width
+          canvas.height = img.height
+          let ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, img.width, img.height)
+          base64 = canvas.toDataURL('image/png', fidelity)
+          base64 = base64.slice(base64.indexOf(';base64,') + 8)
+          // console.log(base64)
+          resolve(base64)
+        }
+      }).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
     }
+
   },
   created () {},
   mounted () {
