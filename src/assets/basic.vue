@@ -15,6 +15,7 @@ export default {
   },
   computed: {
   },
+  // filters: {},
   components: {
     // basicvue
   },

@@ -20,6 +20,7 @@ import serverIndex from '../page/server/index.vue'
 import serverUploadDidttm from '../page/server/uploadDidttm.vue'
 import serverPvData from '../page/server/pvdata.vue'
 import serverCertifyDetail from '../page/server/certifyDetail.vue'
+import serverPersonCheck from '../page/server/personCheck.vue'
 
 
 // const routerPush = VueRouter.prototype.push
@@ -84,6 +85,10 @@ const routes = [
       {
         path: 'certifyDetail',
         component: serverCertifyDetail
+      },
+      {
+        path: 'personCheck',
+        component: serverPersonCheck
       },
       {
         path: 'pvdata',

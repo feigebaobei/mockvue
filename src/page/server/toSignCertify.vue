@@ -1,8 +1,11 @@
 <template>
   <div class="toSignCertify">
     <h2>待签发证书</h2>
-    <p v-for="(item, index) in certifyList" :key="index" class="item" @click="gotoCertifySign(item)">
-      <span>{{item}}</span>
+    <p v-for="(item, key, index) in certifyList" :key="index" class="item" @click="gotoCertifySign(key)">
+      <!-- <span>{{key}}</span>
+      <span>{{index}}</span>
+      <span>{{item}}</span> -->
+      <span>{{item.orgName}}</span>
       <img :src="arrows" alt="">
     </p>
     <!-- <basicvue></basicvue> -->
@@ -18,7 +21,7 @@ export default {
   data () {
     return {
       arrows: arrows,
-      certifyList: []
+      certifyList: {}
     }
   },
   computed: {
@@ -32,7 +35,8 @@ export default {
     },
     getData () {
       instance({
-        url: '/claim/needSignCertify',
+        // url: '/claim/needSignCertify',
+        url: '/claim/pendingTask',
         method: 'get'
       }).then(res => {
         this.certifyList = res.data.data
@@ -40,11 +44,11 @@ export default {
         console.log(err)
       })
     },
-    gotoCertifySign (certifySignUuid) {
+    gotoCertifySign (claim_sn) {
       this.$router.push({
-        path: '/server/certifySign',
+        path: '/server/personCheck',
         query: {
-          certifySignUuid: certifySignUuid
+          claim_sn: claim_sn
         }
       })
     }
