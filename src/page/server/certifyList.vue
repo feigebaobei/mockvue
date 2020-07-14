@@ -12,7 +12,7 @@
 <script>
 // import { basicvue } from '@/components/oasiscare'
 // import instance from '@/lib/axiosInstance'
-import tokenSDKServer from 'token-sdk-server'
+// import tokenSDKServer from 'token-sdk-server'
 export default {
   props: {},
   data () {
@@ -39,13 +39,13 @@ export default {
       //   url: '/claim/templateList',
       //   method: 'get'
       // })
-      tokenSDKServer.getTemplateList()
-      .then(res => {
-        console.log(res)
-        this.certifyList = res.data.data
-      }).catch(err => {
-        console.log(err)
-      })
+      // tokenSDKServer.getTemplateList()
+      // .then(res => {
+      //   console.log(res)
+      //   this.certifyList = res.data.data
+      // }).catch(err => {
+      //   console.log(err)
+      // })
     },
     gotoApplyCertify (id) {
       this.$router.push({

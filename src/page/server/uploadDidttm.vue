@@ -2,12 +2,22 @@
   <div class="updataPvData">
     <!-- 上传文件 -->
     <form action="#" method="post" enctype="multipart/form-data" class="form">
-      <div class="item">
+      <!-- <div class="item">
         <label class="label" for="didttm">dit文件</label>
         <input type="file" name="didttm" id="didttm" @change="changeDidttm">
+      </div> -->
+      <div class="item">
+        <label class="label" for="didttm">dit文件</label>
+        <!-- <input type="textarea" name="didttm" id="didttm" @change="changeDidttm"> -->
+        <textarea name="didttm" id="" cols="30" rows="10" v-model="didttm"></textarea>
+      </div>
+      <div class="item">
+        <label class="label" for="idpwd">身份密码</label>
+        <input type="password" v-model="idpwd" id="idpwd">
       </div>
       <button class="button" @click="submitDidttm">提交</button>
     </form>
+    <!-- 暂停解密功能 -->
     <!-- 解密 -->
     <form action="#" method="post" v-if="didttmUploaded" class="form">
       <div class="item">
@@ -16,11 +26,11 @@
       </div>
       <button class="button" @click="decryptDidttm">解密并查看明文</button>
     </form>
+    <!-- 暂停查看明文功能 -->
     <!-- 查看明文 -->
     <section class="mtBox" v-if="decrypt.finish">
       <section v-if="decrypt.result">
         <p>解密成功</p>
-        <!-- <button class="button" @click="reqDidttmMt">查看明文</button> -->
         <p>{{this.didttmmt}}</p>
       </section>
       <section v-else>
@@ -66,18 +76,20 @@ export default {
       instance({
         url: '/private/didttm',
         method: 'post',
-        data: this.getFormData(),
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(res => {
-        console.log('res', res)
-        if (res.data.result) {
-          this.didttmUploaded = true
-        } else {
-          this.didttmUploaded = false
-        }
+        // data: this.getFormData(),
+        data: {
+          didttmStr: this.didttm,
+          idpwd: this.idpwd
+        },
+        // headers: {
+        //   'Content-Type': 'multipart/form-data'
+        // }
+      }).then(() => {
+        // console.log('res', res)
+        alert('上传成功')
       }).catch(err => {
+        // alert('上传失败')
+        alert('身份密码不正确')
         console.log('err', err)
       })
     },
