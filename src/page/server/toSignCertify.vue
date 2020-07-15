@@ -5,7 +5,7 @@
       <!-- <span>{{key}}</span>
       <span>{{index}}</span>
       <span>{{item}}</span> -->
-      <span>{{item.orgName}}</span>
+      <span>{{item.businessLicenseData.orgName}}</span>
       <img :src="arrows" alt="">
     </p>
     <!-- <basicvue></basicvue> -->
