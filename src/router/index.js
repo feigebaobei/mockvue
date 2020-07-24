@@ -21,6 +21,8 @@ import serverUploadDidttm from '../page/server/uploadDidttm.vue'
 import serverPvData from '../page/server/pvdata.vue'
 import serverCertifyDetail from '../page/server/certifyDetail.vue'
 import serverPersonCheck from '../page/server/personCheck.vue'
+import serverWebSocket from '../page/server/webSocket.vue'
+import serverWebSocket2 from '../page/server/webSocket2.vue'
 
 
 // const routerPush = VueRouter.prototype.push
@@ -89,6 +91,14 @@ const routes = [
       {
         path: 'personCheck',
         component: serverPersonCheck
+      },
+      {
+        path: 'webSocket',
+        component: serverWebSocket
+      },
+      {
+        path: 'webSocket2',
+        component: serverWebSocket2
       },
       {
         path: 'pvdata',

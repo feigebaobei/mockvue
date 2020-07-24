@@ -12,6 +12,14 @@ let getSeparateData = (date) => {
 //   let 
 // }
 
+let isOnline = () => {
+  let href = location.href
+  // let reg = new RegExp('[.org|.com|.cn]', 'g')
+  // return reg.test(href)
+  return href.indexOf('.org') > -1 || href.indexOf('.com') > -1 || href.indexOf('.cn') > -1
+}
+
 export default {
-  getSeparateData
+  getSeparateData,
+  isOnline
 }
