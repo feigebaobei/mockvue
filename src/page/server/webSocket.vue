@@ -59,7 +59,7 @@ export default {
       this.ws.onclose = function (e) {
         console.log('close', e)
       }
-      this.ws.onerrro = function (e) {
+      this.ws.onerror = function (e) {
         console.log('error', e)
       }
       this.ws.onmessage = function (e) {
@@ -69,21 +69,11 @@ export default {
     },
     sendMessage () {
       // this.ws.send(this.cont)
-      this.ws.send(this.createMessage(this.cont, [this.pdid, this.pdid1, this.pdid2]))
+      this.ws.send(this.createMessage(this.cont, [this.pdid, this.pdid1, this.pdid2], 'confirm', new Date().getTime()))
     },
-    // createMessage (data) {
-    //   return JSON.stringify({
-    //     data: {
-    //       type: 'message',
-    //       content: data,
-    //       createTime: new Date().getTime()
-    //     },
-    //     receiver: [this.pdid, this.pdid1, this.pdid2]
-    //   })
-    // }
-    createMessage (content = '', receiver = [], type = 'message', createTime = new Date().getTime(), messageId = []) {
+    createMessage (content = '', receiver = [], method = '', messageId = '', createTime = new Date().getTime()) {
       return JSON.stringify({
-        type: type,
+        method: method,
         content: content,
         messageId: messageId,
         createTime: createTime,
