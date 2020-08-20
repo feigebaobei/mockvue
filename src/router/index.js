@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import index from '../page/index.vue'
 import login from '../page/login.vue'
+import signup from '../page/signup.vue'
 import cont from '../page/cont.vue'
 import pvdata from '../page/pvdata.vue'
 import staticp from '../page/staticp.vue'
@@ -48,6 +49,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: login
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: signup
   },
   {
     path: '/cont',

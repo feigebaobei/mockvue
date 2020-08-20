@@ -8,6 +8,7 @@
       <div id="nav">
         <router-link to="/index" class="navItem">index</router-link>
         <router-link to="/login" class="navItem">login</router-link>
+        <router-link to="/signup" class="navItem">signup</router-link>
         <router-link to="/cont" class="navItem">content</router-link>
         <router-link to="/pvdata" class="navItem">pvdata</router-link>
         <router-link to="/testTokenSDKClient" class="navItem">testTokenSDKClient</router-link>
@@ -18,6 +19,9 @@
         <router-link to="/server/webSocket" class="navItem">webSocket</router-link>
         <router-link to="/server/webSocket2" class="navItem">webSocket2</router-link>
         <!-- <router-link to="/server/certifyOfServer" class="navItem">服务端的证书</router-link> -->
+      </div>
+      <div>
+        <span @click="logout">登出</span>
       </div>
       <div class="userInfoBox" v-if="name || avatar">
         <span class="name">{{name}}</span>
@@ -35,6 +39,7 @@
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
+import instance from '@/lib/axiosInstance'
 
 export default {
   name: 'App',
@@ -60,6 +65,19 @@ export default {
   },
   components: {
     // HelloWorld
+  },
+  methods: {
+    logout () {
+      instance({
+        url: '/users/logout',
+        method: 'post',
+        data: {}
+      }).then(response => {
+        console.log(response.data)
+      }).catch(error => {
+        console.log(error)
+      })
+    }
   }
 }
 </script>

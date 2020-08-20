@@ -49,6 +49,26 @@
         </div>
       </form>
     </section>
+    <section class="localFormBox">
+      <form action="#" class="localForm">
+        <div class="item">
+          <label for="email">email</label>
+          <input type="text" id="email" name="email" class="input" v-model="localFormData.email" placeholder="请输入email">
+        </div>
+        <div class="item">
+          <label for="password">password</label>
+          <input type="password" id="password" name="password" class="input" v-model="localFormData.password" placeholder="请输入password">
+        </div>
+        <div class="item">
+          <button class="button submit" @click="submit">提交</button>
+          <button class="button reset" @click="reset">重置</button>
+        </div>
+      </form>
+    </section>
+    <section>
+      <button @click="testfn">test</button>
+      <button @click="testCookie">testCookie</button>
+    </section>
   </div>
 </template>
 
@@ -76,7 +96,12 @@ export default {
         idpwd: '',
         authUserInfoList: [], //['name', 'avatar']
         provideAuthUserInfoList: [],
-      }
+      },
+      localFormData: {
+        email: 'qwsrsd',
+        password: '123456'
+      },
+      purposeUrl: this.$route.query.purposeUrl
     }
   },
   computed: {},
@@ -234,6 +259,62 @@ export default {
         console.log(error)
         alert(error.message)
       })
+    },
+    submit (event) {
+      event.preventDefault()
+      instance({
+        url: '/users/login',
+        method: 'post',
+        data: {
+          email: this.localFormData.email,
+          password: this.localFormData.password
+        },
+        withCredential: true
+      }).then(response => {
+        // console.
+        if (response.data.data) {
+          if (this.purposeUrl) {
+            this.$router.push({
+              path: this.purposeUrl,
+            })
+          } else {
+            this.$router.push({
+              path: '/'
+            })
+          }
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    reset (event) {
+      event.preventDefault()
+      this.localFormData.email = ''
+      this.localFormData.password = ''
+    },
+    testfn (event) {
+      event.preventDefault()
+      instance({
+        url: '/users/test',
+        method: 'post',
+        data: {}
+      }).then(response => {
+        console.log(response.data)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    testCookie (event) {
+      event.preventDefault()
+      instance({
+        url: '/users/cookie',
+        method: 'post',
+        data: {}
+      }).then(response => {
+        console.log(response.data)
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   created () {},
@@ -269,6 +350,7 @@ export default {
 
   .formLogin
   .authForm
+  .localForm
     width: 360px
 
     .item
@@ -276,6 +358,7 @@ export default {
       display: flex
       align-items: center
       margin-bottom: 10px
+      justify-content: space-between
 
       .label
         margin-right: 6px
@@ -291,6 +374,10 @@ export default {
         padding: 8px
         border-radius: 8px
         margin-bottom: 15px
+
+      .submit
+      .reset
+        width: 46%
 
       #getCheckCode
         width: 120px

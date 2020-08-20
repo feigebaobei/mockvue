@@ -86,13 +86,16 @@
         <span class="value">{{ocrData.verificationMoney}}</span>
       </p>
     </div>
-    <div v-if="claim.isPersonCheck === null">
+    <div class="canvasBox">
+      <canvas id="canvas" ref="qr"></canvas>
+    </div>
+    <!-- <div v-if="claim.isPersonCheck === null">
       <button class="bt" @click="check(true)">通过</button>
       <button class="bt" @click="check(false)">不通过</button>
     </div>
     <div v-else>
       <p>{{opResult(claim.isPersonCheck)}}</p>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -101,6 +104,7 @@
 import instance from '@/lib/axiosInstance'
 import proxyAxios from '@/lib/proxyAxios'
 import tokenSDKClient from 'token-sdk-client'
+import QRCode from 'qrcode'
 export default {
   props: {},
   data () {
@@ -145,6 +149,8 @@ export default {
         if (response.data.result) {
           this.claim = response.data.data
           this.getBusinessLicense(this.claim.msgObj.content.businessLicenseData.ocrData.businessLicense)
+          // this.renderQr(tokenSDKClient.genAuthQrStr([], 'N', '', '审核证书', new Date().getTime() + 5 * 60 * 1000))
+          this.renderQr()
         }
       })
       .catch(error => {
@@ -217,6 +223,25 @@ export default {
       } else {
         return '未通过'
       }
+    },
+    renderQr () {
+      instance({
+        url: '/audit',
+        method: 'get',
+        params: {
+          claim_sn: this.claim_sn
+        }
+      }).then(response => {
+        let qrStr = response.data.data
+        // console.log(JSON.parse(response.data.data))
+        QRCode.toCanvas(this.$refs.qr, qrStr, error => {
+          if (error) {
+            console.log(error)
+          }
+        })
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   created () {},
