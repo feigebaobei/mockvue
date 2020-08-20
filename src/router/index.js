@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import index from '../page/index.vue'
-import login from '../page/login.vue'
+import login from '../page/login.vue' // 未使用懒加载
+const tokenLogin = () => import('../page/loginToken') // 使用import方式懒加载
 import signup from '../page/signup.vue'
 import cont from '../page/cont.vue'
 import pvdata from '../page/pvdata.vue'
@@ -49,6 +50,12 @@ const routes = [
     path: '/login',
     name: 'login',
     component: login
+  },
+  {
+    path: '/tokenLogin',
+    name: 'tokenLogin',
+    component: tokenLogin
+    // component: resolve => (require('../page/loginToken'), resolve) // 使用require方式懒加载
   },
   {
     path: '/signup',

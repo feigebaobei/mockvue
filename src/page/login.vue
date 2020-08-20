@@ -69,6 +69,11 @@
       <button @click="testfn">test</button>
       <button @click="testCookie">testCookie</button>
     </section>
+    <p>联合登录方式</p>
+    <p>
+      <span class="loginMethodItem" @click="tokenLogin">token</span>
+      <span class="loginMethodItem" @click="githubLogin">github</span>
+    </p>
   </div>
 </template>
 
@@ -315,6 +320,19 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    tokenLogin (event) {
+      event.preventDefault()
+      this.$router.push({
+        path: '/tokenLogin'
+      })
+    },
+    githubLogin (event) {
+      event.preventDefault()
+      alert('暂未开通')
+      // this.$router.push({
+      //   path: '/tokenLogin'
+      // })
     }
   },
   created () {},
@@ -399,5 +417,10 @@ export default {
       .checkbox
         width: 28px
         height: 28px
+
+  .loginMethodItem
+    margin: 5px 10px
+    font-size: 28px
+    cursor: pointer
 
 </style>
