@@ -1,7 +1,7 @@
 <template>
   <div id="login">
     <!-- <h2>welcome to login page.</h2> -->
-    <p>请选择登录方式</p>
+    <!-- <p>请选择登录方式</p>
     <section class="buttons">
       <button id="scan" @click="selectLoginMethod('scan')">扫码登录</button>
       <button id="udid" @click="selectLoginMethod('udid')">udid登录</button>
@@ -48,7 +48,7 @@
           <button class="button" @click="authUserInfo">授权使用</button>
         </div>
       </form>
-    </section>
+    </section> -->
     <section class="localFormBox">
       <form action="#" class="localForm">
         <div class="item">
@@ -65,10 +65,10 @@
         </div>
       </form>
     </section>
-    <section>
+    <!-- <section>
       <button @click="testfn">test</button>
       <button @click="testCookie">testCookie</button>
-    </section>
+    </section> -->
     <p>联合登录方式</p>
     <p>
       <span class="loginMethodItem" @click="tokenLogin">token</span>
@@ -116,7 +116,7 @@ export default {
   methods: {
     init () {
       // console.log(this)
-      this.getQRData()
+      // this.getQRData()
     },
     // 请求qr data
     getQRData () {
