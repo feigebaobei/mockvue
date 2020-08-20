@@ -64,7 +64,7 @@ export default {
       })
     },
     pollLoginStatus () {
-      let that = this
+      // let that = this
       if (!this.hasUserInfo && this.validTime) {
         this.getUserInfo().then(response => {
           if (response.data.result) {
@@ -81,7 +81,7 @@ export default {
               that.pollLoginStatus()
             }, 1000)
           }
-        }).catch(error => {
+        }).catch(() => {
           let that = this
           setTimeout(function () {
             that.pollLoginStatus()
