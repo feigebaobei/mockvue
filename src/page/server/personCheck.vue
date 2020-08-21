@@ -194,15 +194,17 @@ export default {
           // auditor: 'did:ttm:u01234b27c8e5160a907b1373f083af3d2eb64fd8ee9800998ecf8427eab11'
         }
       }).then((response) => {
+        alert(response.data.message ? response.data.message : '请审核员在链信宝app上确认操作。')
+        // if (response)
         // console.log(response.data)
-        if (response.data.result) {
-          this.$router.go(-1)
-        } else {
-          alert('出错了')
-        }
-      }).catch(error => {
-        alert('失败')
-        console.log(error)
+        // if (response.data.result) {
+        //   this.$router.go(-1)
+        // } else {
+        //   alert('出错了')
+        // }
+      // }).catch(error => {
+      //   alert('失败')
+      //   console.log(error)
       })
     },
     getType (type) {
