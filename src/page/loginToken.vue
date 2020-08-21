@@ -60,7 +60,8 @@ export default {
     // },
     getUserInfo () {
       return instance({
-        url: '/users/userInfo',
+        // url: '/users/userInfo',
+        url: '/users/loginStatus',
         method: 'get'
       })
     },
