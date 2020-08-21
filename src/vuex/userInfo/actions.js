@@ -22,7 +22,8 @@ const actions = {
   },
   modifyUserInfo: ({commit}, payload) => {
     commit('modifyUserInfo', payload)
-  }
+  },
+  // modify
   // allData: (context) => {
   //   console.log(context)
   // }

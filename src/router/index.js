@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import index from '../page/index.vue'
 import login from '../page/login.vue' // 未使用懒加载
 const tokenLogin = () => import('../page/loginToken') // 使用import方式懒加载
+// const personIndex = () => import('../page/personIndex')
 import signup from '../page/signup.vue'
 import cont from '../page/cont.vue'
 import pvdata from '../page/pvdata.vue'
@@ -49,13 +50,31 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: login
+    component: login,
+    beforeEnter: (to, from, next) => {
+      // console.log(to, from)
+      // to = `${to}?purposeUrl=${from.fullPath}`
+      // to.query = {}
+      // if ()
+      // next(to)
+      // to.fullPath = from.fullPath
+      // to.query.purposeUrl = from.fullPath
+      // console.log(to, from)
+      // next(to)
+      // to.fullPath += '2345t=dff'
+      next()
+    }
   },
   {
     path: '/tokenLogin',
     name: 'tokenLogin',
     component: tokenLogin
-    // component: resolve => (require('../page/loginToken'), resolve) // 使用require方式懒加载
+  },
+  {
+    path: '/personIndex',
+    name: 'personIndex',
+    // component: personIndex
+    component: resolve => (require(['../page/personIndex'], resolve)) // 使用require方式懒加载
   },
   {
     path: '/signup',
@@ -103,7 +122,11 @@ const routes = [
       },
       {
         path: 'personCheck',
-        component: serverPersonCheck
+        component: serverPersonCheck,
+        // beforeEnter: (to, from, next) => {
+        //   console.log(to, from)
+        //   next()
+        // }
       },
       {
         path: 'webSocket',

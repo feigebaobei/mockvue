@@ -103,8 +103,8 @@ export default {
         provideAuthUserInfoList: [],
       },
       localFormData: {
-        email: 'qwsrsd',
-        password: '123456'
+        email: '18515195415@163.com',
+        password: '1234qwerA'
       },
       purposeUrl: this.$route.query.purposeUrl
     }
@@ -276,7 +276,7 @@ export default {
         },
         withCredential: true
       }).then(response => {
-        // console.
+        // console.log(response.data)
         if (response.data.data) {
           if (this.purposeUrl) {
             this.$router.push({
@@ -287,6 +287,8 @@ export default {
               path: '/'
             })
           }
+          sessionStorage.setItem('userInfo', JSON.stringify(response.data.data))
+          this.$store.dispatch('modifyUserInfo', {userInfo: response.data.data})
         }
       }).catch(error => {
         console.log(error)

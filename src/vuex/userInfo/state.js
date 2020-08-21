@@ -6,7 +6,7 @@ const state = {
   // name: '',
   // avatar: '',
   // udid: '',
-  
+
   pvData: {
     property: {
       // nickName: '',
@@ -14,6 +14,7 @@ const state = {
     }
   },
   hasPvData: false,
-  keyStore: {}
+  keyStore: {},
+  userInfo: {}
 }
 export default state

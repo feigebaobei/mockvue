@@ -86,16 +86,18 @@
         <span class="value">{{ocrData.verificationMoney}}</span>
       </p>
     </div>
-    <div class="canvasBox">
+    <!-- <div class="canvasBox">
       <canvas id="canvas" ref="qr"></canvas>
-    </div>
-    <!-- <div v-if="claim.isPersonCheck === null">
+    </div> -->
+    <!-- <div v-if="claim.isPersonCheck === null"> -->
+    <div v-if="!claim.auditor">
       <button class="bt" @click="check(true)">通过</button>
       <button class="bt" @click="check(false)">不通过</button>
     </div>
     <div v-else>
-      <p>{{opResult(claim.isPersonCheck)}}</p>
-    </div> -->
+      <!-- <p>{{opResult(claim.auditor)}}</p> -->
+      <p>{{claim.auditor}} 已处理</p>
+    </div>
   </div>
 </template>
 
@@ -104,7 +106,7 @@
 import instance from '@/lib/axiosInstance'
 import proxyAxios from '@/lib/proxyAxios'
 import tokenSDKClient from 'token-sdk-client'
-import QRCode from 'qrcode'
+// import QRCode from 'qrcode'
 export default {
   props: {},
   data () {
@@ -150,7 +152,7 @@ export default {
           this.claim = response.data.data
           this.getBusinessLicense(this.claim.msgObj.content.businessLicenseData.ocrData.businessLicense)
           // this.renderQr(tokenSDKClient.genAuthQrStr([], 'N', '', '审核证书', new Date().getTime() + 5 * 60 * 1000))
-          this.renderQr()
+          // this.renderQr()
         }
       })
       .catch(error => {
@@ -187,9 +189,9 @@ export default {
         url: '/claim/personCheck',
         method: 'post',
         data: {
-          operator: bool,
-          claim_sn: this.claim_sn,
-          checker: 'did:ttm:u01234b27c8e5160a907b1373f083af3d2eb64fd8ee9800998ecf8427eab11'
+          opResult: bool,
+          claim_sn: this.claim_sn
+          // auditor: 'did:ttm:u01234b27c8e5160a907b1373f083af3d2eb64fd8ee9800998ecf8427eab11'
         }
       }).then((response) => {
         // console.log(response.data)
@@ -215,38 +217,42 @@ export default {
       }
       return resType
     },
-    opResult (result) {
-      if (result === null) {
-        return '未处理'
-      } else if (result) {
-        return '已通过'
-      } else {
-        return '未通过'
-      }
-    },
-    renderQr () {
-      instance({
-        url: '/audit',
-        method: 'get',
-        params: {
-          claim_sn: this.claim_sn
-        }
-      }).then(response => {
-        let qrStr = response.data.data
-        // console.log(JSON.parse(response.data.data))
-        QRCode.toCanvas(this.$refs.qr, qrStr, error => {
-          if (error) {
-            console.log(error)
-          }
-        })
-      }).catch(error => {
-        console.log(error)
-      })
-    }
+    // opResult (auditor) {
+    //   // if (result === null) {
+    //   //   return '未处理'
+    //   // } else if (result) {
+    //   //   return '已通过'
+    //   // } else {
+    //   //   return '未通过'
+    //   // }
+    //   return
+    // },
+    // renderQr () {
+    //   instance({
+    //     url: '/audit',
+    //     method: 'get',
+    //     params: {
+    //       claim_sn: this.claim_sn
+    //     }
+    //   }).then(response => {
+    //     let qrStr = response.data.data
+    //     // console.log(JSON.parse(response.data.data))
+    //     QRCode.toCanvas(this.$refs.qr, qrStr, error => {
+    //       if (error) {
+    //         console.log(error)
+    //       }
+    //     })
+    //   }).catch(error => {
+    //     console.log(error)
+    //   })
+    // }
   },
   created () {},
   mounted () {
     this.init()
+    // this.$router.push({
+    //   path: '/login'
+    // })
   }
 }
 </script>

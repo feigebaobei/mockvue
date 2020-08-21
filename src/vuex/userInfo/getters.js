@@ -14,5 +14,6 @@ const getters = {
   getUdid: state => state.udid,
   getPvData: state => state.pvData,
   getKeyStore: state => state.keyStore,
+  getUserInfo: state => state.userInfo,
 }
 export default getters

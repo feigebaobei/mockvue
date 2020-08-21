@@ -20,7 +20,8 @@ const mutations = {
     state.udid = payload.udid
   },
   modifyUserInfo: (state, payload) => {
-    state.pvData.property = payload.userInfo
+    // state.pvData.property = payload.userInfo
+    state.userInfo = payload.userInfo
   },
   modifyPvData: (state, payload) => {
     // console.log('payload', payload)
