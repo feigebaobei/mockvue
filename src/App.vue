@@ -24,8 +24,8 @@
       <div>
         <!-- <span @click="logout" style="{cursor: pointer;}">登出</span> -->
       </div>
-      <div class="userInfoBox" v-if="userInfo.email">
-        <span class="name">{{userInfo.email}} 已登录</span>
+      <div class="userInfoBox" v-if="opName">
+        <span class="name">{{opName}} 已登录</span>
         <span @click="logout">登出</span>
       </div>
       <div class="userInfoBox" v-else>
@@ -57,35 +57,18 @@ export default {
     return {
       // name: '',
       // avatar: '',
-      // userInfo: {}
+      userInfo: {}
     }
   },
   computed: {
-    userInfo () {
-      // let userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || ''
-      // return userInfo
-
-      // let u = this.$store.getters.getUserInfo
-      // console.log(u)
-      // return u
-
-      return this.$store.getters.getUserInfo
+    // userInfo () {
+    //   return this.$store.getters.getUserInfo
+    // },
+    opName () {
+      let ui = this.$store.getters.getUserInfo
+      return ui.email ? ui.email : (ui.profile ? ui.profile.name : '')
     },
     name () {
-      // // let temp = this.$store.getters.getName
-      // // if (temp) {}
-      // // return this.$store.getters.getName ? this.$store.getters.getName : ''
-      // let pvData = this.$store.getters.getPvData
-      // return JSON.stringify(pvData) === '{}' ? '' : pvData.property.nickName
-
-      // console.log(JSON.parse(sessionStorage.getItem('userInfo')))
-      // let userInfo = JSON.parse(sessionStorage.getItem('userInfo') || '{}')
-      // this.userInfo = userInfo
-      // if (userInfo.name) {
-      //   return userInfo.name
-      // } else {
-      //   return ''
-      // }
       return ''
     },
     avatar: function () {
@@ -100,24 +83,12 @@ export default {
   methods: {
     init () {
       let userInfoStr = sessionStorage.getItem('userInfo')
-      // console.log('userInfoStr', userInfoStr)
-      // this.$store.
-      // console.log(ss)
-      // store.
-      // console.log(this.$store)
-      // this.$store.dispatch('modifyName', {name: '3453'})
-      // this.$store.dispatch('modifyUserInfo', {userInfo: {name: '3453'}})
       if (userInfoStr) {
-        this.$store.dispatch('modifyUserInfo', {userInfo: JSON.parse(userInfoStr)})
+        let userInfo = JSON.parse(userInfoStr)
+        console.log(userInfo)
+        this.$store.dispatch('modifyUserInfo', {userInfo: userInfo})
+        this.userInfo = userInfo
       }
-      // 测试能否取得保存在vuex里的数据。
-      // 结果是可以取得。
-      // let that = this
-      // setTimeout(function () {
-      //   console.log(that.$store)
-      //   let n = that.$store.getters.getUserInfo
-      //   console.log('getter name', n)
-      // }, 1000)
     },
     logout () {
       instance({

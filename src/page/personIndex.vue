@@ -5,15 +5,15 @@
     <p>姓名</p>
     <p>{{name}}</p>
     <p>性别</p>
-    <p>{{name}}</p>
+    <p>{{gender}}</p>
     <p>头像</p>
-    <p>{{name}}</p>
+    <p>{{picture}}</p>
   </div>
 </template>
 
 <script>
 // import { basicvue } from '@/components/oasiscare'
-import instance from '@/lib/axiosInstance'
+// import instance from '@/lib/axiosInstance'
 export default {
   props: {},
   data () {
@@ -32,21 +32,26 @@ export default {
   methods: {
     init () {
       this.getData()
+
     },
     getData () {
-      instance({
-        url: '/users/userInfo',
-        // method: 'get'
-      }).then(response => {
-        console.log(response.data)
-      }).catch(() => {
-        this.$router.push({
-          path: '/login',
-          query: {
-            purposeUrl: '/personIndex'
-          }
-        })
-      })
+      let ui = this.$store.getters.getUserInfo
+      this.name = ui.profile.name
+      this.gender = ui.profile.gender
+      this.picture = ui.profile.picture
+      // instance({
+      //   url: '/users/userInfo',
+      //   // method: 'get'
+      // }).then(response => {
+      //   console.log(response.data)
+      // }).catch(() => {
+      //   this.$router.push({
+      //     path: '/login',
+      //     query: {
+      //       purposeUrl: '/personIndex'
+      //     }
+      //   })
+      // })
     }
   },
   created () {},

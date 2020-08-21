@@ -18,7 +18,8 @@ export default {
     return {
       validTime: 0,
       userInfo: '',
-      hasUserInfo: false // 是否得到了用户信息
+      hasUserInfo: false, // 是否得到了用户信息
+      timer: null
     }
   },
   computed: {
@@ -39,7 +40,7 @@ export default {
         // console.log(JSON.parse(response.data.data))
         this.validTime = Math.floor((Number(JSON.parse(response.data.data).expire) - Date.now()) / 1000)
         // this.validTime = 5
-        this.spendTime()
+        // this.spendTime()
         this.pollLoginStatus()
         return QRCode.toCanvas(this.$refs.qr, response.data.data, error => {
           return Promise.reject(error)
@@ -48,15 +49,15 @@ export default {
         console.log(error)
       })
     },
-    spendTime () {
-      let that = this
-      setTimeout(function () {
-        if (that.validTime) {
-          that.validTime--
-          that.spendTime()
-        }
-      }, 1000);
-    },
+    // spendTime () {
+    //   let that = this
+    //   setTimeout(function () {
+    //     if (that.validTime) {
+    //       that.validTime--
+    //       that.spendTime()
+    //     }
+    //   }, 1000);
+    // },
     getUserInfo () {
       return instance({
         url: '/users/userInfo',
@@ -77,13 +78,13 @@ export default {
             })
           } else {
             let that = this
-            setTimeout(function () {
+            this.timer = setTimeout(function () {
               that.pollLoginStatus()
             }, 1000)
           }
         }).catch(() => {
           let that = this
-          setTimeout(function () {
+          this.timer = setTimeout(function () {
             that.pollLoginStatus()
           }, 1000)
         })
@@ -93,6 +94,9 @@ export default {
   created () {},
   mounted () {
     this.init()
+  },
+  destroyed () {
+    clearTimeout(this.timer)
   }
 }
 </script>

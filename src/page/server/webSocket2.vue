@@ -57,7 +57,7 @@ export default {
       did: 'did:ttm:o04d88758f182adbf2e936a4be7b8129ef13fc0f1de9800998ecf8427e54ee',
       pdid: 'did:ttm:u055806a0396f78a19cc350f7e6869b939677751ab2b84938f26f024cf8854',
       // pdid: '',
-      fromDid: 'did:ttm:o04d88758f182adbf2e936a4be7b8129ef13fc0f1de9800998ecf8427e54ee',
+      fromDid: 'did:ttm:u055806a0396f78a19cc350f7e6869b939677751ab2b84938f26f024cf8854',
       toDid: 'did:ttm:a0e01cb27c8e5160a907b1373f083af3d2eb64fd8ee9800998ecf8427eab11',
       cont: '',
       msg: {
