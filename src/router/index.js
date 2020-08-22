@@ -4,29 +4,34 @@ import index from '../page/index.vue'
 import login from '../page/login.vue' // 未使用懒加载
 const tokenLogin = () => import('../page/loginToken') // 使用import方式懒加载
 // const personIndex = () => import('../page/personIndex')
-import signup from '../page/signup.vue'
-import cont from '../page/cont.vue'
-import pvdata from '../page/pvdata.vue'
-import staticp from '../page/staticp.vue'
-import testTokenSDKClient from '../page/testTokenSDKClient.vue'
+// import signup from '../page/signup.vue'
+// import cont from '../page/cont.vue'
+// import pvdata from '../page/pvdata.vue'
+// import staticp from '../page/staticp.vue'
+// import testTokenSDKClient from '../page/testTokenSDKClient.vue'
 
-import certifyList from '../page/server/certifyList.vue'
-import applyCertify from '../page/server/applyCertify.vue'
-import certifyOfServer from '../page/server/certifyOfServer.vue'
-import toSignCertify from '../page/server/toSignCertify.vue'
-import certifyDetail from '../page/server/certifyDetail.vue'
-import certifyCheck from '../page/server/certifyCheck.vue'
-import certifySign from '../page/server/certifySign.vue'
-import certifyPoster from '../page/server/certifyPoster.vue'
+// const signup = () => import('../page/signup.vue')
+const cont = () => import('../page/cont.vue')
+const pvdata = () => import('../page/pvdata.vue')
+const staticp = () => import('../page/staticp.vue')
+const testTokenSDKClient = () => import('../page/testTokenSDKClient.vue')
 
-import serverIndex from '../page/server/index.vue'
-import serverUploadDidttm from '../page/server/uploadDidttm.vue'
-import serverPvData from '../page/server/pvdata.vue'
-import serverCertifyDetail from '../page/server/certifyDetail.vue'
-import serverPersonCheck from '../page/server/personCheck.vue'
-import serverWebSocket from '../page/server/webSocket.vue'
-import serverWebSocket2 from '../page/server/webSocket2.vue'
+const certifyList = () => import('../page/server/certifyList.vue')
+const applyCertify = () => import('../page/server/applyCertify.vue')
+const certifyOfServer = () => import('../page/server/certifyOfServer.vue')
+const toSignCertify = () => import('../page/server/toSignCertify.vue')
+const certifyDetail = () => import('../page/server/certifyDetail.vue')
+const certifyCheck = () => import('../page/server/certifyCheck.vue')
+const certifySign = () => import('../page/server/certifySign.vue')
+const certifyPoster = () => import('../page/server/certifyPoster.vue')
 
+const serverIndex = () => import('../page/server/index.vue')
+const serverUploadDidttm = () => import('../page/server/uploadDidttm.vue')
+const serverPvData = () => import('../page/server/pvdata.vue')
+const serverCertifyDetail = () => import('../page/server/certifyDetail.vue')
+const serverPersonCheck = () => import('../page/server/personCheck.vue')
+const serverWebSocket = () => import('../page/server/webSocket.vue')
+const serverWebSocket2 = () => import('../page/server/webSocket2.vue')
 
 // const routerPush = VueRouter.prototype.push
 // VueRouter.prototype.push = function push(location) {
@@ -79,12 +84,13 @@ const routes = [
   {
     path: '/signup',
     name: 'signup',
-    component: signup
+    // component: signup()
+    component: resolve => (require(['../page/signup'], resolve))
   },
   {
     path: '/cont',
     name: 'cont',
-    component: cont
+    component: cont()
   },
   {
     path: '/pvdata',
@@ -109,6 +115,7 @@ const routes = [
   {
     path: '/server',
     // name: 'server',
+    // component: serverIndex,
     component: serverIndex,
     children: [
       {
@@ -122,7 +129,7 @@ const routes = [
       },
       {
         path: 'personCheck',
-        component: serverPersonCheck,
+        component: serverPersonCheck
         // beforeEnter: (to, from, next) => {
         //   console.log(to, from)
         //   next()
