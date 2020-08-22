@@ -39,41 +39,53 @@ export default {
       }).then(response => {
         // console.log(JSON.parse(response.data.data))
         this.validTime = Math.floor((Number(JSON.parse(response.data.data).expire) - Date.now()) / 1000)
-        // this.validTime = 5
-        // this.spendTime()
+        // this.validTime = 5 // 测试用
+        this.spendTime()
         this.pollLoginStatus()
         return QRCode.toCanvas(this.$refs.qr, response.data.data, error => {
-          return Promise.reject(error)
+          if (error) {
+            console.log(error)
+          }
         })
       }).catch(error => {
         console.log(error)
       })
     },
-    // spendTime () {
-    //   let that = this
-    //   setTimeout(function () {
-    //     if (that.validTime) {
-    //       that.validTime--
-    //       that.spendTime()
-    //     }
-    //   }, 1000);
-    // },
-    getUserInfo () {
+    spendTime () {
+      let that = this
+      setTimeout(function () {
+        if (that.validTime) {
+          that.validTime--
+          that.spendTime()
+        }
+      }, 1000);
+    },
+    getLoginStatus () {
       return instance({
-        // url: '/users/userInfo',
         url: '/users/loginStatus',
         method: 'get'
       })
     },
+    getUserInfo () {
+      instance({
+        url: '/users/userInfo',
+      }).then(response => {
+        // if (response.)
+        sessionStorage.setItem('userInfo', JSON.stringify(response.data.data))
+        this.$store.dispatch('modiyfUserInfo', {userInfo: response.data.data})
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     pollLoginStatus () {
-      // let that = this
       if (!this.hasUserInfo && this.validTime) {
-        this.getUserInfo().then(response => {
+        this.getLoginStatus().then(response => {
           if (response.data.result) {
             this.userInfo = response.data.data
             this.hasUserInfo = true
             sessionStorage.userInfo = JSON.stringify(response.data.data)
-            alert('已登录')
+            // alert('已登录')
+            this.getUserInfo()
             this.$router.push({
               path: '/'
             })
