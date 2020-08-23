@@ -49,14 +49,15 @@
         </div>
       </form>
     </section> -->
+    <p>本地登录方式</p>
     <section class="localFormBox">
       <form action="#" class="localForm">
         <div class="item">
-          <label for="email">email</label>
+          <label class="label" for="email">email</label>
           <input type="text" id="email" name="email" class="input" v-model="localFormData.email" placeholder="请输入email">
         </div>
         <div class="item">
-          <label for="password">password</label>
+          <label class="label" for="password">password</label>
           <input type="password" id="password" name="password" class="input" v-model="localFormData.password" placeholder="请输入password">
         </div>
         <div class="item">
@@ -73,6 +74,8 @@
     <p>
       <span class="loginMethodItem" @click="tokenLogin">token</span>
       <span class="loginMethodItem" @click="githubLogin">github</span>
+      <span class="loginMethodItem" @click="githubLogin">微信</span>
+      <span class="loginMethodItem" @click="githubLogin">新浪</span>
     </p>
   </div>
 </template>
