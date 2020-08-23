@@ -57,13 +57,13 @@ export default {
     return {
       // name: '',
       // avatar: '',
-      userInfo: {}
+      // userInfo: {}
     }
   },
   computed: {
-    // userInfo () {
-    //   return this.$store.getters.getUserInfo
-    // },
+    userInfo () {
+      return this.$store.getters.getUserInfo
+    },
     opName () {
       let ui = this.$store.getters.getUserInfo
       return ui.email ? ui.email : (ui.profile ? ui.profile.name : '')
