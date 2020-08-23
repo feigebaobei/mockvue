@@ -11,7 +11,7 @@
         </p>
         <p class="block">
           <span class="key">父did是否签名</span>
-          <span class="value">{{opResult(item.isPdidCheck)}}</span>
+          <span class="value">{{opPdid(item.isPdidCheck)}}</span>
         </p>
         <p class="block">
           <span class="key">人工审核是否签名</span>
@@ -97,22 +97,12 @@ export default {
       }
       return resType
     },
-    opResult (result) {
-      if (result === null) {
-        return '未处理'
-      } else if (result) {
-        return '已通过'
-      } else {
-        return '未通过'
-      }
+    opPdid (result) {
+      return result ? '已通过' : '未通过'
     },
     opPerson (item) {
       if (item.auditor) {
-        if (item.isPersonCheck) {
-          return '已通达'
-        } else {
-          return '未通过'
-        }
+        return item.isPersonCheck ? '已通过' : '未通过'
       } else {
         return '未处理'
       }
