@@ -56,8 +56,18 @@ export default {
         method: 'get'
       }).then(res => {
         this.certifyList = res.data.data
-      }).catch(err => {
-        console.log(err)
+      }).catch(error => {
+        // console.log(error)
+        // console.log(error.config)
+        // console.log(error.code)
+        // console.log(error.message)
+        // console.log(error.response)
+        if (error.response.status === 401) {
+          console.log('2345rew')
+          this.$router.push({
+            path: '/login'
+          })
+        }
       })
     },
     gotoCertifySign (claim_sn) {
