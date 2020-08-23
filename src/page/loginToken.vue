@@ -72,7 +72,7 @@ export default {
       }).then(response => {
         // if (response.)
         sessionStorage.setItem('userInfo', JSON.stringify(response.data.data))
-        this.$store.dispatch('modiyfUserInfo', {userInfo: response.data.data})
+        this.$store.dispatch('modifyUserInfo', {userInfo: response.data.data})
       }).catch(error => {
         console.log(error)
       })

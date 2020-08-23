@@ -85,9 +85,9 @@ export default {
       let userInfoStr = sessionStorage.getItem('userInfo')
       if (userInfoStr) {
         let userInfo = JSON.parse(userInfoStr)
-        console.log(userInfo)
+        // console.log(userInfo)
         this.$store.dispatch('modifyUserInfo', {userInfo: userInfo})
-        this.userInfo = userInfo
+        // this.userInfo = userInfo
       }
     },
     logout () {
