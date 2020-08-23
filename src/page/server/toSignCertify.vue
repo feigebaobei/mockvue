@@ -15,7 +15,7 @@
         </p>
         <p class="block">
           <span class="key">人工审核是否签名</span>
-          <span class="value">{{opResult(item.isPersonCheck)}}</span>
+          <span class="value">{{opPerson(item)}}</span>
         </p>
       </div>
       <img :src="arrows" alt="" class="arrows">
@@ -57,13 +57,7 @@ export default {
       }).then(res => {
         this.certifyList = res.data.data
       }).catch(error => {
-        // console.log(error)
-        // console.log(error.config)
-        // console.log(error.code)
-        // console.log(error.message)
-        // console.log(error.response)
         if (error.response.status === 401) {
-          console.log('2345rew')
           this.$router.push({
             path: '/login'
           })
@@ -110,6 +104,17 @@ export default {
         return '已通过'
       } else {
         return '未通过'
+      }
+    },
+    opPerson (item) {
+      if (item.auditor) {
+        if (item.isPersonCheck) {
+          return '已通达'
+        } else {
+          return '未通过'
+        }
+      } else {
+        return '未处理'
       }
     },
     refresh () {
