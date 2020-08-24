@@ -121,57 +121,57 @@ export default {
         method: 'get'
       }).then(response => {
         let data = response.data.data
-        data = {
-          "0xe8bc70e9b33d19e9a7dc901c7f75a25d08e9ae3c2780b77f3816a46d08061419":{
-            "msgObj":{
-              "content":{
-                "businessLicenseData":{
-                  "applicantDid":"did:ttm:o0fc4810265e45e221b581407ae29298ac98332466e9800998ecf8427ecb62",
-                  "applicantSuperDid":"did:ttm:u011b80743b5fa85ade3a5696eef660b2bae1ba4ba2b84938f26f024cf3fcd",
-                  "claim_sn":"0xe8bc70e9b33d19e9a7dc901c7f75a25d08e9ae3c2780b77f3816a46d08061419",
-                  "createTime":"1598184426000",
-                  "members":["did:ttm:u011b80743b5fa85ade3a5696eef660b2bae1ba4ba2b84938f26f024cf3fcd", "did:ttm:a0e01cb27c8e5160a907b1373f083af3d2eb64fd8ee9800998ecf8427eab11"],
-                  "ocrData":{
-                    "unifiedSocialCreditCode":"91110108551385082Q",
-                    "name":"小米科技有限责任公司",
-                    "type":"有限责任公司(自然人投资或控股)",
-                    "residence":"北京市海淀区西二旗中路33号院6号楼6层006号展示使用",
-                    "legalRepresentative":"雷军",
-                    "registeredCapital":"185000万元",
-                    "dateOfEstablishment":"2010年03月03日",
-                    "operatingPeriod":"2030年03月02日",
-                    "businessScope":"卖手机",
-                    "registrationAuthority":"聚聚",
-                    "businessLicense":"0xf4d0f699d9183c20f628814de97c323ac1824a879a48ffcabbeb80693d3a9444",
-                    "longitude":"",
-                    "latitude":"",
-                    "applicantBankAccountName":"",
-                    "applicantBankName":"",
-                    "applicantBankAccountNumber":"",
-                    "receiveBankName":"北京银行",
-                    "receiveBankAccountName":"北京投肯科技",
-                    "receiveBankAccountNumber":"88888888888888888888",
-                    "verificationMoney":"0.02元"
-                  },
-                  "templateId":"0x40c82a7b3367e346bdcb68021c02a425ba889752636d1d5fd0e0c0cb60efa380"
-                },
-                "sign":"0x3245d2400a5ad360430c5588973a1718f211067fabd2d030a9ff1791e00eeb4536cc9283fbe2309a8f7d82d5fe886e5200011091c7e30de1b6c242a69284446e01",
-                "type":"businessLicenseConfirm"
-              },
-              "createTime":"1598184426000",
-              "messageId":"a0e9c726-1f74-4bfe-88ae-a618ebea34e2",
-              "method":"confirm",
-              "sender":"did:ttm:o0fc4810265e45e221b581407ae29298ac98332466e9800998ecf8427ecb62"
-            },
-            "isPersonCheck":false,
-            "isPdidCheck":false,
-            "auditor":"did:ttm:u0d82e03b9bea525763f3c2c559865c53cb58228c7fafc0dc6285b3643b7d3",
-            "type":"businessLicenseConfirm"
-          }
-        }
+        // data = {
+        //   "0xe8bc70e9b33d19e9a7dc901c7f75a25d08e9ae3c2780b77f3816a46d08061419":{
+        //     "msgObj":{
+        //       "content":{
+        //         "businessLicenseData":{
+        //           "applicantDid":"did:ttm:o0fc4810265e45e221b581407ae29298ac98332466e9800998ecf8427ecb62",
+        //           "applicantSuperDid":"did:ttm:u011b80743b5fa85ade3a5696eef660b2bae1ba4ba2b84938f26f024cf3fcd",
+        //           "claim_sn":"0xe8bc70e9b33d19e9a7dc901c7f75a25d08e9ae3c2780b77f3816a46d08061419",
+        //           "createTime":"1598184426000",
+        //           "members":["did:ttm:u011b80743b5fa85ade3a5696eef660b2bae1ba4ba2b84938f26f024cf3fcd", "did:ttm:a0e01cb27c8e5160a907b1373f083af3d2eb64fd8ee9800998ecf8427eab11"],
+        //           "ocrData":{
+        //             "unifiedSocialCreditCode":"91110108551385082Q",
+        //             "name":"小米科技有限责任公司",
+        //             "type":"有限责任公司(自然人投资或控股)",
+        //             "residence":"北京市海淀区西二旗中路33号院6号楼6层006号展示使用",
+        //             "legalRepresentative":"雷军",
+        //             "registeredCapital":"185000万元",
+        //             "dateOfEstablishment":"2010年03月03日",
+        //             "operatingPeriod":"2030年03月02日",
+        //             "businessScope":"卖手机",
+        //             "registrationAuthority":"聚聚",
+        //             "businessLicense":"0xf4d0f699d9183c20f628814de97c323ac1824a879a48ffcabbeb80693d3a9444",
+        //             "longitude":"",
+        //             "latitude":"",
+        //             "applicantBankAccountName":"",
+        //             "applicantBankName":"",
+        //             "applicantBankAccountNumber":"",
+        //             "receiveBankName":"北京银行",
+        //             "receiveBankAccountName":"北京投肯科技",
+        //             "receiveBankAccountNumber":"88888888888888888888",
+        //             "verificationMoney":"0.02元"
+        //           },
+        //           "templateId":"0x40c82a7b3367e346bdcb68021c02a425ba889752636d1d5fd0e0c0cb60efa380"
+        //         },
+        //         "sign":"0x3245d2400a5ad360430c5588973a1718f211067fabd2d030a9ff1791e00eeb4536cc9283fbe2309a8f7d82d5fe886e5200011091c7e30de1b6c242a69284446e01",
+        //         "type":"businessLicenseConfirm"
+        //       },
+        //       "createTime":"1598184426000",
+        //       "messageId":"a0e9c726-1f74-4bfe-88ae-a618ebea34e2",
+        //       "method":"confirm",
+        //       "sender":"did:ttm:o0fc4810265e45e221b581407ae29298ac98332466e9800998ecf8427ecb62"
+        //     },
+        //     "isPersonCheck":false,
+        //     "isPdidCheck":false,
+        //     "auditor":"did:ttm:u0d82e03b9bea525763f3c2c559865c53cb58228c7fafc0dc6285b3643b7d3",
+        //     "type":"businessLicenseConfirm"
+        //   }
+        // }
         let certifyList = []
         for (let [, value] of Object.entries(data)) {
-          certifyList.push(value)
+          // certifyList.push(value)
           certifyList.push(value)
         }
         let tbArr = certifyList.reduce((res, cur) => {
