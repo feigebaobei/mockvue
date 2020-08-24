@@ -56,19 +56,9 @@ const routes = [
     path: '/login',
     name: 'login',
     component: login,
-    beforeEnter: (to, from, next) => {
-      // console.log(to, from)
-      // to = `${to}?purposeUrl=${from.fullPath}`
-      // to.query = {}
-      // if ()
-      // next(to)
-      // to.fullPath = from.fullPath
-      // to.query.purposeUrl = from.fullPath
-      // console.log(to, from)
-      // next(to)
-      // to.fullPath += '2345t=dff'
-      next()
-    }
+    // beforeEnter: (to, from, next) => {
+    //   next()
+    // }
   },
   {
     path: '/tokenLogin',
@@ -130,10 +120,6 @@ const routes = [
       {
         path: 'personCheck',
         component: serverPersonCheck
-        // beforeEnter: (to, from, next) => {
-        //   console.log(to, from)
-        //   next()
-        // }
       },
       {
         path: 'webSocket',

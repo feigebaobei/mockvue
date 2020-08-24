@@ -9,16 +9,18 @@
         <router-link to="/index" class="navItem">index</router-link>
         <router-link to="/login" class="navItem">login</router-link>
         <router-link to="/signup" class="navItem">signup</router-link>
-        <router-link to="/cont" class="navItem">content</router-link>
-        <router-link to="/pvdata" class="navItem">pvdata</router-link>
-        <router-link to="/testTokenSDKClient" class="navItem">testTokenSDKClient</router-link>
-        <router-link to="/server/uploadDidttm" class="navItem">上传私密文件</router-link>
-        <router-link to="/server/pvdata" class="navItem">服务端pvdata</router-link>
-        <router-link to="/server/certifyList" class="navItem">申请证书</router-link>
-        <router-link to="/server/toSignCertify" class="navItem">待签发证书</router-link>
-        <router-link to="/server/webSocket" class="navItem">webSocket</router-link>
-        <router-link to="/server/webSocket2" class="navItem">webSocket2</router-link>
-        <router-link to="/personIndex" class="navItem">个人首页</router-link>
+        <router-link to="/server/toSignCertify" class="navItem">待办项</router-link>
+        <div class="" v-if="!config.env">
+          <router-link to="/cont" class="navItem">content</router-link>
+          <router-link to="/pvdata" class="navItem">pvdata</router-link>
+          <router-link to="/testTokenSDKClient" class="navItem">testTokenSDKClient</router-link>
+          <router-link to="/server/uploadDidttm" class="navItem">上传私密文件</router-link>
+          <router-link to="/server/pvdata" class="navItem">服务端pvdata</router-link>
+          <router-link to="/server/certifyList" class="navItem">申请证书</router-link>
+          <router-link to="/server/webSocket" class="navItem">webSocket</router-link>
+          <router-link to="/server/webSocket2" class="navItem">webSocket2</router-link>
+          <router-link to="/personIndex" class="navItem">个人首页</router-link>
+        </div>
         <!-- <router-link to="/server/certifyOfServer" class="navItem">服务端的证书</router-link> -->
       </div>
       <div>
@@ -50,6 +52,7 @@
 // import HelloWorld from './components/HelloWorld.vue'
 import instance from '@/lib/axiosInstance'
 // import {mapActions} from 'vuex'
+import config from '@/lib/config'
 
 export default {
   name: 'App',
@@ -58,6 +61,7 @@ export default {
       // name: '',
       // avatar: '',
       // userInfo: {}
+      config: config
     }
   },
   computed: {
@@ -110,6 +114,12 @@ export default {
   }
 }
 </script>
+
+<style>
+  body {
+    font-size: 16px;
+  }
+</style>
 
 <style lang="stylus">
 #app

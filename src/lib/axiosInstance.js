@@ -7,8 +7,8 @@ let isProduction = function () {
   } else if (host.indexOf('org') > -1) {
     return 'http://lixiaodan.org:9876/' // 李晓聃的测试环境
   } else {
-    return 'http://lixiaodan.org:9876/' // 李晓聃的测试环境
-    // return 'http://127.0.0.1:9876/'
+    // return 'http://lixiaodan.org:9876/' // 李晓聃的测试环境
+    return 'http://127.0.0.1:9876/'
   }
 }
 

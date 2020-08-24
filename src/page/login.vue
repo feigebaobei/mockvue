@@ -1,54 +1,5 @@
 <template>
   <div id="login">
-    <!-- <h2>welcome to login page.</h2> -->
-    <!-- <p>请选择登录方式</p>
-    <section class="buttons">
-      <button id="scan" @click="selectLoginMethod('scan')">扫码登录</button>
-      <button id="udid" @click="selectLoginMethod('udid')">udid登录</button>
-    </section>
-    <section class="scanLogin" v-show="this.loginMethod === 'scan'">
-      <canvas id="canvas" ref="qr"></canvas>
-      <button id="simulateLogin" @click="simulateLogin">模拟登录</button>
-    </section>
-    <section v-show="this.loginMethod === 'udid'">
-      <form action="#" class="formLogin" >
-        <div class="item">
-          <label for="phone" class="label">手机号</label>
-          <input type="text" id="phone" name="phone" class="input" v-model="formData.phone">
-        </div>
-        <div class="item">
-          <label for="checkCode" class="label">验证码</label>
-          <input type="text" id="checkCode" name="checkCode" class="input" v-model="formData.checkCode">
-          <button id="getCheckCode" @click="getCheckCode">获取验证码</button>
-        </div>
-        <div class="item">
-          <button class="button" @click="getUdidList">获取did</button>
-        </div>
-        <div class="item">
-          <label for="udid" class="label">udid</label>
-          <select name="udid" id="udid"  class="select" v-model="formData.selectedUdid">
-            <option v-for="(item, index) in this.formData.udidList" :key="index" :value="item.udid">{{item.title}} {{item.udid}}</option>
-          </select>
-        </div>
-        <div class="item">
-          <label for="idpwd" class="label">身份密码</label>
-          <input type="password" id="idpwd" name="idpwd" class="input" v-model="formData.idpwd">
-        </div>
-        <div class="item">
-          <button class="button" @click="getPvDataBox">获取pvdata</button>
-        </div>
-      </form>
-      <p class="tip">登录时服务器需要您的这些数据：</p>
-      <form action="#" class="authForm">
-        <div class="item" v-for="(item, index) in formData.authUserInfoList" :key="index">
-          <label :for="item" class="label">{{item}}</label>
-          <input type="checkbox" :id="item" :name="item" class="checkbox" :value="item" v-model="formData.provideAuthUserInfoList">
-        </div>
-        <div class="item">
-          <button class="button" @click="authUserInfo">授权使用</button>
-        </div>
-      </form>
-    </section> -->
     <p>本地登录方式</p>
     <section class="localFormBox">
       <form action="#" class="localForm">
@@ -66,13 +17,9 @@
         </div>
       </form>
     </section>
-    <!-- <section>
-      <button @click="testfn">test</button>
-      <button @click="testCookie">testCookie</button>
-    </section> -->
     <p>联合登录方式</p>
     <p>
-      <span class="loginMethodItem" @click="tokenLogin">token</span>
+      <span class="loginMethodItem" @click="tokenLogin">链信</span>
       <span class="loginMethodItem" @click="githubLogin">github</span>
       <span class="loginMethodItem" @click="githubLogin">微信</span>
       <span class="loginMethodItem" @click="githubLogin">新浪</span>

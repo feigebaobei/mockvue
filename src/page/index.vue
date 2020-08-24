@@ -1,6 +1,13 @@
 <template>
   <div id="index">
-    <h2>welcome to index page.</h2>
+    <!-- <h2>welcome to index page.</h2> -->
+    <div v-if="userInfo.profile">
+      <h2 v-if="!userInfo.loginTime">欢迎{{opName}}完成绑定。</h2>
+      <h2 v-else>欢迎{{opName}}回来。</h2>
+    </div>
+    <div v-else>
+      <h2>welcome to index page.</h2>
+    </div>
     <p>登录和未登录都可以访问首页的内容。</p>
   </div>
 </template>
@@ -20,29 +27,25 @@ export default {
       qxct: 'f6d10d352134f2fb70506bee3f552d9d2d30a2f43f79effd15365b57351c85d857545b93c0eddd53bc779ca19dd276bd20a683043e3f5ec18cd6221490602eaae99784e69a7c0f6ed7caf13cbd1dbb7c64a4e8db13d65f4d399e39a8236b5be326499eba5cf4ef419060037436290bb0'
     }
   },
+  computed : {
+    userInfo () {
+      return this.$store.getters.getUserInfo
+    },
+    opName () {
+      let ui = this.$store.getters.getUserInfo
+      return ui.email ? ui.email : (ui.profile ? ui.profile.name : '')
+    }
+  },
   components: {
     // HelloWorld
   },
   methods: {
-    init () {
-      // tokenSDKClient.decryptPvData('f6d10d352134f2fb70506bee3f552d9d2d30a2f43f79effd15365b57351c85d857545b93c0eddd53bc779ca19dd276bd20a683043e3f5ec18cd6221490602eaae99784e69a7c0f6ed7caf13cbd1dbb7c64a4e8db13d65f4d399e39a8236b5be326499eba5cf4ef419060037436290bb0', '5090ffff751b0e1d2b6170d66b2e47a4fe74e91e15f3dfd5e6840361e1f7fca4') // 可以解密
-      // let byte = 
-      // tokenSDKClient.decryptPvData(this.qxct, '5090ffff751b0e1d2b6170d66b2e47a4fe74e91e15f3dfd5e6840361e1f7fca4')
-      // console.log('mt', this.asciiToStr(byte))
-      // tokenSDKClient.genKey('55c974f17a0b44178d982dcd478150b8a4c0f206f397d7880d06bf5a72932b81')
-    },
-    // getData () {}
-    asciiToStr(arr) {
-      var str = ''
-      for (var i = 0; i < arr.length; i++) {
-        str += String.fromCharCode(arr[i])
-      }
-      return str
-    }
+    // init () {
+    // },
   },
   created () {},
   mounted () {
-    this.init()
+    // this.init()
   }
 }
 </script>
