@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import index from '../page/index.vue'
 import login from '../page/login.vue' // 未使用懒加载
 const tokenLogin = () => import('../page/loginToken') // 使用import方式懒加载
+const test = () => import('../page/test')
 // const personIndex = () => import('../page/personIndex')
 // import signup from '../page/signup.vue'
 // import cont from '../page/cont.vue'
@@ -101,6 +102,11 @@ const routes = [
     path: '/applyCertify',
     name: 'applyCertify',
     component: applyCertify
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: test
   },
   {
     path: '/server',
