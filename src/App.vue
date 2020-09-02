@@ -20,6 +20,7 @@
           <router-link to="/server/webSocket" class="navItem">webSocket</router-link>
           <router-link to="/server/webSocket2" class="navItem">webSocket2</router-link>
           <router-link to="/personIndex" class="navItem">个人首页</router-link>
+          <router-link to="/test" class="navItem">test</router-link>
         </div>
         <!-- <router-link to="/server/certifyOfServer" class="navItem">服务端的证书</router-link> -->
       </div>

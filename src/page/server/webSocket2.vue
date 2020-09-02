@@ -13,7 +13,8 @@
     <button @click="fillTo('did:ttm:o04d88758f182adbf2e936a4be7b8129ef13fc0f1de9800998ecf8427e54ee')">did:ttm:o04d88758f182adbf2e936a4be7b8129ef13fc0f1de9800998ecf8427e54ee</button>
     <!-- <button @click="fillTo('did:ttm:u031b13098469b14ce277f18d028a00068b4aaf6b80f618b7c574017486712')">did:ttm:u031b13098469b14ce277f18d028a00068b4aaf6b80f618b7c574017486712</button> -->
     <button @click="fillTo('did:ttm:a0e09fb5c4f53eee7f8f4fff4429d072381b1b2c23e9800998ecf8427ebc1e')">did:ttm:a0e09fb5c4f53eee7f8f4fff4429d072381b1b2c23e9800998ecf8427ebc1e</button>
-    <button @click="fillTo('did:ttm:a0e01cb27c8e5160a907b1373f083af3d2eb64fd8ee9800998ecf8427eab11')">认证应用 did:ttm:a0e01cb27c8e5160a907b1373f083af3d2eb64fd8ee9800998ecf8427eab11</button>
+    <button @click="fillTo('did:ttm:a0e01cb27c8e5160a907b1373f083af3d2eb64fd8ee9800998ecf8427eab11')">远端认证应用 did:ttm:a0e01cb27c8e5160a907b1373f083af3d2eb64fd8ee9800998ecf8427eab11</button>
+    <button @click="fillTo('did:ttm:a0d931d76818589a79f63bd2576d867bf45bd6464be9800998ecf8427e8344')">本地认证应用 did:ttm:a0d931d76818589a79f63bd2576d867bf45bd6464be9800998ecf8427e8344</button>
     <br>
     <textarea name="" id="" cols="30" rows="10" v-model="toDid" placeholder="请输入did"></textarea>
     <h2>message</h2>
