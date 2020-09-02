@@ -16,6 +16,8 @@ const cont = () => import('../page/cont.vue')
 const pvdata = () => import('../page/pvdata.vue')
 const staticp = () => import('../page/staticp.vue')
 const testTokenSDKClient = () => import('../page/testTokenSDKClient.vue')
+const userInfo = () => import('../page/userInfo')
+const userDefault = () => import('../page/userDefault')
 
 const certifyList = () => import('../page/server/certifyList.vue')
 const applyCertify = () => import('../page/server/applyCertify.vue')
@@ -33,6 +35,7 @@ const serverCertifyDetail = () => import('../page/server/certifyDetail.vue')
 const serverPersonCheck = () => import('../page/server/personCheck.vue')
 const serverWebSocket = () => import('../page/server/webSocket.vue')
 const serverWebSocket2 = () => import('../page/server/webSocket2.vue')
+const serverUserSelect = () => import('../page/server/userSelect.vue')
 
 // const routerPush = VueRouter.prototype.push
 // VueRouter.prototype.push = function push(location) {
@@ -109,6 +112,16 @@ const routes = [
     component: test
   },
   {
+    path: '/userInfo',
+    name: 'userInfo',
+    component: userInfo
+  },
+  {
+    path: '/userDefault',
+    name: 'userDefault',
+    component: userDefault
+  },
+  {
     path: '/server',
     // name: 'server',
     // component: serverIndex,
@@ -130,10 +143,6 @@ const routes = [
       {
         path: 'webSocket',
         component: serverWebSocket
-      },
-      {
-        path: 'webSocket2',
-        component: serverWebSocket2
       },
       {
         path: 'pvdata',
@@ -173,7 +182,15 @@ const routes = [
         path: 'certifyPoster',
         name: 'certifyPoster',
         component: certifyPoster
-      }
+      },
+      {
+        path: 'webSocket2',
+        component: serverWebSocket2
+      },
+      {
+        path: 'userSelect',
+        component: serverUserSelect
+      },
     ]
   },
 ]

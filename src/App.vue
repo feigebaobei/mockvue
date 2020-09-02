@@ -10,6 +10,7 @@
         <router-link to="/login" class="navItem">login</router-link>
         <router-link to="/signup" class="navItem">signup</router-link>
         <router-link to="/server/toSignCertify" class="navItem">待办项</router-link>
+        <router-link to="/userInfo" class="navItem">用户信息</router-link>
         <div class="" v-if="!config.env">
           <router-link to="/cont" class="navItem">content</router-link>
           <router-link to="/pvdata" class="navItem">pvdata</router-link>
@@ -87,10 +88,11 @@ export default {
   },
   methods: {
     init () {
+      // 刷新页面时把session里的用户数据保存在vuex里。
       let userInfoStr = sessionStorage.getItem('userInfo')
       if (userInfoStr) {
         let userInfo = JSON.parse(userInfoStr)
-        // console.log(userInfo)
+        console.log(userInfo)
         this.$store.dispatch('modifyUserInfo', {userInfo: userInfo})
         // this.userInfo = userInfo
       }
