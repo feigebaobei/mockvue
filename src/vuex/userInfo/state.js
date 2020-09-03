@@ -15,6 +15,7 @@ const state = {
   },
   hasPvData: false,
   keyStore: {},
-  userInfo: {}
+  userInfo: {
+  }
 }
 export default state

@@ -1,9 +1,9 @@
 <template>
   <div id="index">
     <!-- <h2>welcome to index page.</h2> -->
-    <div v-if="userInfo.profile">
-      <h2 v-if="!userInfo.loginTime">欢迎{{opName}}完成绑定。</h2>
-      <h2 v-else>欢迎{{opName}}回来。</h2>
+    <div v-if="userInfo">
+      <h2 v-if="!userInfo.loginTime" class="welSlogen">欢迎{{opName}}完成绑定。</h2>
+      <h2 v-else class="welSlogen">欢迎{{opName}}回来。</h2>
     </div>
     <div v-else>
       <h2>welcome to index page.</h2>
@@ -33,7 +33,7 @@ export default {
     },
     opName () {
       let ui = this.$store.getters.getUserInfo
-      return ui.email ? ui.email : (ui.profile ? ui.profile.name : '')
+      return ui.name || ui.email || ui.token || ui.github
     }
   },
   components: {
@@ -54,4 +54,7 @@ export default {
   p
     font-size: 36px
     color: #ccc
+
+  .welSlogen
+    word-break: break-all
 </style>

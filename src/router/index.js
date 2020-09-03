@@ -69,12 +69,12 @@ const routes = [
     name: 'tokenLogin',
     component: tokenLogin
   },
-  {
-    path: '/personIndex',
-    name: 'personIndex',
-    // component: personIndex
-    component: resolve => (require(['../page/personIndex'], resolve)) // 使用require方式懒加载
-  },
+  // {
+  //   path: '/personIndex',
+  //   name: 'personIndex',
+  //   // component: personIndex
+  //   component: resolve => (require(['../page/personIndex'], resolve)) // 使用require方式懒加载
+  // },
   {
     path: '/signup',
     name: 'signup',

@@ -43,6 +43,7 @@ export default {
           res = 'userDefault'
           break
       }
+      res = 'userSelect' // 测试用
       return res
     }
   },

@@ -195,16 +195,14 @@ export default {
         }
       }).then((response) => {
         alert(response.data.message ? response.data.message : '请审核员在链信宝app上确认操作。')
-        // if (response)
-        // console.log(response.data)
-        // if (response.data.result) {
-        //   this.$router.go(-1)
-        // } else {
-        //   alert('出错了')
-        // }
-      // }).catch(error => {
-      //   alert('失败')
-      //   console.log(error)
+      })
+      .catch(error => {
+        if (error.response.status === 401) {
+          alert(response.data.message ? response.data.message : '没有权限')
+        }
+        else {
+          alert('操作失败')
+        }
       })
     },
     getType (type) {
