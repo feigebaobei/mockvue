@@ -57,7 +57,9 @@ let mergeTrueField = (a, obj = {}) => {
     if (value instanceof Object) {
       obj[key] = mergeTrueField(a)
     } else {
-      if (obj.hasOwnProperty(key)) {
+      console.log('obj', obj)
+      // if (obj.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
         if (value) {
           obj[key] = value
         }

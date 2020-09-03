@@ -10,6 +10,7 @@
         <router-link to="/login" class="navItem">login</router-link>
         <router-link to="/signup" class="navItem">signup</router-link>
         <router-link to="/server/toSignCertify" class="navItem">待办项</router-link>
+        <router-link to="/userInfo" class="navItem">用户信息</router-link>
         <div class="" v-if="!config.env">
           <router-link to="/cont" class="navItem">content</router-link>
           <router-link to="/pvdata" class="navItem">pvdata</router-link>
@@ -19,7 +20,7 @@
           <router-link to="/server/certifyList" class="navItem">申请证书</router-link>
           <router-link to="/server/webSocket" class="navItem">webSocket</router-link>
           <router-link to="/server/webSocket2" class="navItem">webSocket2</router-link>
-          <router-link to="/personIndex" class="navItem">个人首页</router-link>
+          <!-- <router-link to="/personIndex" class="navItem">个人首页</router-link> -->
           <router-link to="/test" class="navItem">test</router-link>
         </div>
         <!-- <router-link to="/server/certifyOfServer" class="navItem">服务端的证书</router-link> -->
@@ -28,7 +29,7 @@
         <!-- <span @click="logout" style="{cursor: pointer;}">登出</span> -->
       </div>
       <div class="userInfoBox" v-if="opName">
-        <span class="name">{{opName}} 已登录</span>
+        <span class="name">{{opName | filtLong}} 已登录</span>
         <span @click="logout">登出</span>
       </div>
       <div class="userInfoBox" v-else>
@@ -70,8 +71,8 @@ export default {
       return this.$store.getters.getUserInfo
     },
     opName () {
-      let ui = this.$store.getters.getUserInfo
-      return ui.email ? ui.email : (ui.profile ? ui.profile.name : '')
+      let ui = this.userInfo
+      return ui.name || ui.email || ui.token || ui.github
     },
     name () {
       return ''
@@ -82,15 +83,21 @@ export default {
       // return this.$store.getters.getAvatar ? this.$store.getters.getAvatar : ''
     }
   },
+  filters: {
+    filtLong (value) {
+      return `...${value.slice(-4)}`
+    }
+  },
   components: {
     // HelloWorld
   },
   methods: {
     init () {
+      // 刷新页面时把session里的用户数据保存在vuex里。
       let userInfoStr = sessionStorage.getItem('userInfo')
       if (userInfoStr) {
         let userInfo = JSON.parse(userInfoStr)
-        // console.log(userInfo)
+        console.log(userInfo)
         this.$store.dispatch('modifyUserInfo', {userInfo: userInfo})
         // this.userInfo = userInfo
       }

@@ -1,5 +1,5 @@
 <template>
-  <div class="personIndex">
+  <div class="userDefault">
     <!-- <h2>基本样式</h2> -->
     <!-- <basicvue></basicvue> -->
     <p>姓名</p>
@@ -36,9 +36,9 @@ export default {
     },
     getData () {
       let ui = this.$store.getters.getUserInfo
-      this.name = ui.profile.name
-      this.gender = ui.profile.gender
-      this.picture = ui.profile.picture
+      this.name = ui.name
+      this.gender = ui.gender
+      this.picture = ui.picture
       // instance({
       //   url: '/users/userInfo',
       //   // method: 'get'
@@ -48,7 +48,7 @@ export default {
       //   this.$router.push({
       //     path: '/login',
       //     query: {
-      //       purposeUrl: '/personIndex'
+      //       purposeUrl: '/userDefault'
       //     }
       //   })
       // })
@@ -63,7 +63,7 @@ export default {
 
 <style lang="stylus" scoped>
 
-  .personIndex
+  .userDefault
 
     h2
       font-size: .36rem
