@@ -6,6 +6,9 @@
     <button @click="fillFrom('did:ttm:o04d88758f182adbf2e936a4be7b8129ef13fc0f1de9800998ecf8427e54ee')">did:ttm:o04d88758f182adbf2e936a4be7b8129ef13fc0f1de9800998ecf8427e54ee</button>
     <!-- <button @click="fillFrom('did:ttm:u031b13098469b14ce277f18d028a00068b4aaf6b80f618b7c574017486712')">did:ttm:u031b13098469b14ce277f18d028a00068b4aaf6b80f618b7c574017486712</button> -->
     <button @click="fillFrom('did:ttm:a0e09fb5c4f53eee7f8f4fff4429d072381b1b2c23e9800998ecf8427ebc1e')">did:ttm:a0e09fb5c4f53eee7f8f4fff4429d072381b1b2c23e9800998ecf8427ebc1e</button>
+    <button @click="fillFrom('did:ttm:u011b80743b5fa85ade3a5696eef660b2bae1ba4ba2b84938f26f024cf3fcd')">李庆雪 did:ttm:u011b80743b5fa85ade3a5696eef660b2bae1ba4ba2b84938f26f024cf3fcd</button>
+    <button @click="fillFrom('did:ttm:u042ec31e277bd08ce9d9044519e3a745b7ba3da030f618b7c57401748b976')">store did:ttm:u042ec31e277bd08ce9d9044519e3a745b7ba3da030f618b7c57401748b976</button>
+    <button @click="fillFrom('did:ttm:u05d41330c253b46bd79983c019f9f93477eda305b0f618b7c57401748bde2')">plain did:ttm:u05d41330c253b46bd79983c019f9f93477eda305b0f618b7c57401748bde2</button>
     <br>
     <textarea name="" id="" cols="30" rows="10" v-model="fromDid" placeholder="请输入did"></textarea>
     <h2>to</h2>
@@ -41,6 +44,7 @@
     <button @click="linkws">链接</button>
     <button @click="unlinkws">断开</button>
     <button @click="packAndSendMessage">封装后发送</button>
+    <button @click="sendMessage">发送</button>
     <br>
     <textarea name="" id="" cols="30" rows="10" v-model="msgId" placeholder="请输入稍息id"></textarea>
     <button @click="confirmReceiveMsg">接收</button>
@@ -114,33 +118,13 @@ export default {
       this.ws.onerrro = function (e) {
         console.log('error', e)
       }
-      // this.ws.onmessage = function (e) {
-      //   console.log('message', e.data, e)
-      //   console.log(this.createMessage('', [], 'read'))
-      //   // this.ws.send(this.createMessage('', [], 'read'))
-      //   // this.sendMessage()
-      // }
       this.ws.onmessage = (e) => {
-        // let data = JSON.parse(e.data)
-        // console.log('message', data, e)
         console.log('message', e)
-        // console.log(this.createMessage('', [], 'read'))
-        // let msgIds = data.reduce((res, cur) => {
-        //   res.push(cur.messageId)
-        //   return res
-        // }, [])
-        // console.log('msgIds', msgIds)
-        // this.ws.send(this.createMessage('', [], 'read', msgIds))
-
       }
     },
-    // sendMessage (cont = this.cont) {
     sendMessage () {
+      console.log(this.cont)
       this.ws.send(this.cont)
-      // this.ws.send(this.createMessage(this.cont, [this.toDid], 'auth'))
-      // this.ws.send(JSON.stringify(this.msg))
-      // this.ws.send(this.cont)
-
     },
     packAndSendMessage () {
       let msg = this.createMessage(JSON.parse(this.cont), [this.toDid], this.method)
