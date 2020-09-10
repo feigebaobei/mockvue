@@ -2,8 +2,9 @@
   <div id="index">
     <!-- <h2>welcome to index page.</h2> -->
     <div v-if="userInfo">
-      <h2 v-if="!userInfo.loginTime" class="welSlogen">欢迎{{opName}}完成绑定。</h2>
-      <h2 v-else class="welSlogen">欢迎{{opName}}回来。</h2>
+      <!-- <h2 v-if="!userInfo.loginTime" class="welSlogen">欢迎{{opName}}完成绑定。</h2> -->
+      <!-- <h2 v-else class="welSlogen">欢迎{{opName}}回来。</h2> -->
+      <h2 v-if="opName" class="welSlogen">欢迎{{opName}}回来。</h2>
     </div>
     <div v-else>
       <h2>welcome to index page.</h2>
@@ -33,7 +34,7 @@ export default {
     },
     opName () {
       let ui = this.$store.getters.getUserInfo
-      return ui.name || ui.email || ui.token || ui.github
+      return ui.name || ui.email || ui.token || ui.github || ''
     }
   },
   components: {
